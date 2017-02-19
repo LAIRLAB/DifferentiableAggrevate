@@ -1,0 +1,80 @@
+\section{Proof of Theorem~\ref{them:upper_bound}}
+
+
+\section{Proof of Theorem~\ref{them:lower_bound}}
+To show a lower bound, we assume that for any state, the expert oracle can only return an unbiased estimate $\tilde{Q}^e(s)$ of $Q^e(s)$ where $\tilde{Q}^e$ is sampled from some unknown distribution $P_s$. 
+\begin{proof}
+For notation simplicity, we denote $\mathcal{S} = \{s_1, s_2, ..., s_S\}$ $|\mathcal{S}|= S$ and $|\mathcal{A}| = A$ in the following proof. We consider a finite MDP with time horizon $H = 1$. The initial distribution $\rho_0 = \{1/S, ..., 1/S\}$ puts $1/S$ weight on each state. At every round $n$, state $s^n$ is sampled from $\rho_0$ and the algorithm uses it's current policy $\pi_{n}^s\in\Delta(|\mathcal{A}|)$ to pick an action $a\in\mathcal{A}$ and then receives a noisy but unbiased estimate $\tilde{Q}^e(s)_n$ of $Q^e(s)\in\mathbb{R}^{|\mathcal{A}|}$ from the expert oracle. The algorithm then update its policy from $\pi_{n}^{s^n}$ to $\pi_{n+1}^{s^n}$ for $s^n$ while keep the other polices for other $s$ unchanged (since the algorithm did not receive any feedback regarding $Q^e(s)$ for $s\neq s^{n}$). We consider the following cumulative regret:
+\begin{align}
+&\mathbb{E}_{s^n\sim\rho_0}\Big[\mathbb{E}_{\tilde{Q}^e(s_n)\sim P_{s_n}}\big[\sum_{n=1}^N( \pi^e_{s^n} \cdot \tilde{Q}^e(s^n) - \pi_n^{s^n}\cdot \tilde{Q}^e(s^n))|s^1,...,s^n\big]\Big] \nonumber\\
+&= \mathbb{E}_{s^n\sim \rho_0}\Big[\mathbb{E}\big[\sum_{n=1}^N (\pi_{s^n}^e\cdot Q^e(s^n) - \pi_n^{s^n}\cdot Q^e(s^n))|s^1,...,s^n\big]\Big] \nonumber\\
+&= \mathbb{E}\big[\sum_{n=1}^N\mathbb{E}_{s\sim\rho_0}\pi_s^e\cdot Q^e(s) - \mathbb{E}_{s\sim \rho_0}\pi_n^s\cdot Q^e(s)\big] \nonumber\\
+& = \mathbb{E}\sum_{n=1}^N [\mu(\pi^e) - \mu(\pi_n)],
+%\mathbb{E}_{\{s^{n}\sim\rho_0\}}\inf_{\pi^s_n,\forall n,s}\sup_{P_s,\forall s}\mathbb{E}_{\{P_s\}} \big[ \sum_{n=1}^N( \pi^e_{s^n} \cdot Q^e(s^n) - \pi_n^{s^n}\cdot Q^e(s^n)) \big]
+\end{align}where the expectation is take over with respect to random variables $\pi_i,i\in[N]$. 
+We first provide lower bound for $\mathbb{E}_{\tilde{Q}^e(s_n)\sim P_{s_n}}\big[\sum_{n=1}^N( \pi^e_{s^n} \cdot \tilde{Q}^e(s^n) - \pi_n^{s^n}\cdot \tilde{Q}^e(s^n))\big]$ conditioned on a given sequence of $s^1,...,s^n$.
+Let us define that among $N$ rounds, the set of the index of the rounds that $s_i$ is picked as $\mathcal{N}_i$ and its cardinality as $N_i$, and we then have $\sum_{i=1}^S N_i = N$ and $\mathcal{N}_i \cap\mathcal{N}_j = \emptyset$,for $i\neq j$. 
+\begin{align}
+&\mathbb{E}_{\tilde{Q}^e(s_n)\sim P_{s_n}}\big[\sum_{n=1}^N( \pi^e_{s^n} \cdot \tilde{Q}^e(s^n) - \pi_n^{s^n}\cdot \tilde{Q}^e(s^n))\big] \nonumber\\
+& = \sum_{i=1}^S \mathbb{E}_{\tilde{Q}_j^e(s_i)\sim P_{s_i}}\sum_{j\sim \mathcal{N}_i} (\pi_{s_i}^e\cdot\tilde{Q}_j^e(s_i) - \pi_{j}^{s_i}\tilde{Q}_j^e(s_i))
+\label{eq:composed}
+\end{align}
+
+
+%\begin{align}
+%&\mathbb{E}_{\{s^n\sim \rho_0\}}\inf_{\pi^s_n,\forall n,s}\sup_{P_s,\forall s}\mathbb{E} \big[ \sum_{n=1}^N( \pi^e_{s^n} \cdot Q^e(s^n) - \pi_n^{s^n}\cdot Q^e(s^n)) \big]\nonumber\\
+%&\geq \mathbb{E}_{\{s^n\sim\rho_0\}} \sum_{i=1}^S \inf_{\{\pi_j^{s_i},j\in \mathcal{N}_i\}}\sup_{P_{s_i}} \mathbb{E}\big[ \sum_{j\in\mathcal{N}_i} (\pi_{s_i}^e \cdot Q^e(s_i) - \pi_{j}^{s_i}\cdot Q^e(s_i))  \big]
+%\label{eq:composed}
+%\end{align}
+Note that for each state $s_i$, at the rounds from $\mathcal{N}_i$, we can think of the algorithm running any possible online linear regression algorithm to compute the sequence of policies $\pi_j^{s_i},\forall j\in \mathcal{N}_i$ for state $s_i$. Note that from classic online linear regression analysis, we can show that for state $s_i$ there exists a distribution $P_{s_i}$ such that for any online algorithm $alg$:
+\begin{align}
+\mathbb{E}_{\tilde{Q}^e_j(s_i)\sim P_{s_i},\forall j\in\mathcal{N}_i}\big[ \sum_{j\in\mathcal{N}_i} (\pi_{s_i}^e \cdot \tilde{Q}_j^e(s_i) - \pi_{j}^{s_i}\cdot \tilde{Q}_j^e(s_i))  \big] \geq c\sqrt{\ln(A) N_i},
+\end{align} for some non-zero positive constant $c$.
+Substitute the above inequality into Eq.~\ref{eq:composed}, we have:
+\begin{align}
+&\mathbb{E}_{\tilde{Q}^e(s_n)\sim P_{s_n}}\big[\sum_{n=1}^N( \pi^e_{s^n} \cdot \tilde{Q}^e(s^n) - \pi_n^{s^n}\cdot \tilde{Q}^e(s^n))\big]\geq \sum_{i=1}^S c\sqrt{\ln(A)N_i} = c\sqrt{\ln(A)}\sum_{i=1}^S\sqrt{N_i}.
+\end{align}
+Now let us put the expectation $\mathbb{E}_{s^i\sim\rho_0,\forall i}$ back, we have:
+\begin{align}
+\label{eq:fact_1}
+&\mathbb{E}_{s^n\sim\rho_0}\Big[\mathbb{E}_{\tilde{Q}^e(s_n)\sim P_{s_n}}\big[\sum_{n=1}^N( \pi^e_{s^n} \cdot \tilde{Q}^e(s^n) - \pi_n^{s^n}\cdot \tilde{Q}^e(s^n))|s^1,...,s^n\big]\Big]\geq  c\sqrt{\ln(A)}\sum_{i=1}^N\mathbb{E}[\sqrt{N_i}].
+\end{align}
+
+Note that each $N_i$ is sampled from a Binomial distribution $\mathcal{B}(N, 1/S)$. To lower bound $\mathbb{E}_{n\sim \mathcal{B}(N,1/S)} \sqrt{n}$, we use Hoeffding's Inequality here.  Note that $N_i = \sum_{n=1}^N a_n$, where $a_n = 1$ if $s_i$ is picked at iteration $n$ and zero otherwise. Hence $a_i$ is from a Bernoulli distribution with parameter $1/S$. Using Hoeffding bound, for $N_i/N$, we get:
+\begin{align}
+P(|N_i/N - 1/S| <= \epsilon) \geq 1 - \exp(-2N\epsilon^2).
+\end{align} Let $\epsilon = 1/(2S)$, and substitute it back to the above inequality, we get:
+\begin{align}
+P(0.5(N/S)\leq N_i \leq 1.5(N/S)) = P(\sqrt{0.5(N/S)}\leq \sqrt{N_i} \leq \sqrt{1.5(N/S)})\geq 1 - \exp(-2N/S^2).
+\end{align}
+Hence, we can lower bound $\mathbb{E}[\sqrt{N_i}]$ as follows:
+\begin{align}
+\mathbb{E}[\sqrt{N_i}] \geq \sqrt{0.5N/S}(1 - \exp(-2N/S^2)).
+\end{align} Take $N$ to infinity, we get:
+\begin{align}
+\lim_{N\to\infty}\mathbb{E}[\sqrt{N_i}] \geq \sqrt{0.5N/S}.
+\end{align}
+Substitute this result back to Eq.~\ref{eq:fact_1}, we get:
+\begin{align}
+\lim_{N\to\infty}&\mathbb{E}_{s^n\sim\rho_0}\Big[\mathbb{E}_{\tilde{Q}^e(s_n)\sim P_{s_n}}\big[\sum_{n=1}^N( \pi^e_{s^n} \cdot \tilde{Q}^e(s^n) - \pi_n^{s^n}\cdot \tilde{Q}^e(s^n))|s^1,...,s^n\big]\Big]\geq c\sqrt{\ln(A)}\sum_{i=1}^S\mathbb{E}[\sqrt{N_i}] \nonumber\\
+&\geq c\sqrt{\ln(A)}S\sqrt{0.5 N/S} = \Omega(\sqrt{S\ln(A)N}). \nonumber
+\end{align}
+
+
+\end{proof}
+
+%\begin{table*}[h]
+%\begin{center}
+%    \begin{tabular}{| l | l | l | l | }
+%    \hline
+%     & \textbf{\pbim-Linear} (DAgger) &\textbf{\pbim-Linear} (Bp)  & \textbf{\pbim-Linear} (DAgger + Bp) \\ \hline
+%    \textbf{Robot Drill Assembly} & 2.15 &  2.54 & \textbf{2.09} \\ \hline 
+%    \textbf{Motion Capture} & 5.75 & 9.94 &\textbf{5.66} \\ \hline
+%    \textbf{Beach Video Texture} &  164.23 & 268.73  & \textbf{164.08} \\ \hline
+%\end{tabular}
+%\end{center}
+%\caption{Comparison between \pbim with DAgger, \pbim with back-propagation using random initialization, and \pbim with back-propagation using DAgger as initialization with ridge linear regression.
+%}
+%\end{table*}
+
+\section{Details of Dependency Parsing for Handwritten Algebra}
