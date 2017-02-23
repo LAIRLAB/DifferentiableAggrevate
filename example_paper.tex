@@ -83,16 +83,20 @@
 
 % The \icmltitle you define below is probably too long as a header.
 % Therefore, a short form for the running title is supplied here:
-\icmltitlerunning{Deeply AggreVaTeD: \\ Imitation Learning }
+\icmltitlerunning{Deeply AggreVaTeD: Imitation Learning }
 
 \begin{document} 
 
 \twocolumn[
 %\icmltitle{Differentiable Imitation Learning and Structured Prediction}
-\icmltitle{Needs better title\\ expect two lines.}
+%\icmltitle{Needs better title\\ expect two lines.}
 
 
-%\icmltitle{Differentiable Imitation Learning and Structured Prediction}
+%\icmltitle{Deeply AggreVaTeD:\\ Differentiable Imitation Learning and Structured Prediction}
+
+%\icmltitle{Deeply AggreVaTeD: \\Why Do Reinforcement Learning When We can Imitate?}
+
+\icmltitle{Deeply AggreVaTeD: \\Imitation Learning $\geq$ Reinforcement Learning for Sequential Prediction}
 
 % It is OKAY to include author information, even for blind
 % submissions: the style file will automatically remove it for you
@@ -109,7 +113,7 @@ $^*$College of Computing, Georgia Institute of Technology, USA
 % You may provide any keywords that you 
 % find helpful for describing your paper; these are used to populate 
 % the "keywords" metadata in the PDF but will not be shown in the document
-\icmlkeywords{boring formatting information, machine learning, ICML}
+\icmlkeywords{imitiation learning, structured prediction, reinforcement learning, sequential prediction}
 
 \vskip 0.3in
 ]
@@ -120,40 +124,64 @@ $^*$College of Computing, Georgia Institute of Technology, USA
 % Following previous work on imitation learning \cite{ross2014reinforcement}, we introduce \emph{Differentiable Imitation Learning} (DIL) \drew{Let's not make it a totally different name since we're basically showing the deep version of Aggrevate}, a family of policy gradient methods for IL. DIL is specifically designed to learn policies modeled by complex function approximators such as neural networks. We also provide a comprehensive theoretical study of IL on finite discrete Markov Decision Process (MDP) to show that IL, in general, can learn much faster than Reinforcement Learning (RL). We experimentally demonstrate a stochastic gradient update procedure and a natural gradient update procedure on high-dimensional continuous robotics control tasks and a partially observable dependency parsing task on raw image data. In practice, we show that DIL, with both feedforward and recurrent neural network policies, can achieve expert-level performance and often surpasses sub-optimal experts.
 % \end{abstract}
 
+\arun{I just chose a title I liked best so I can get a better page-estimate. Look above for the title candidates.}
 
 \begin{abstract}
-Deep learning models are advancing the state of the art in structured prediction, but increasingly require training that goes beyond traditional supervised learning regimes. \cite{} Researchers have begun adopting reinforcement learning algorithms to train such structued predictors. We argue here that \textit{AggrevaTeD}-- a policy gradient extension of the Imitation Learning approach of \cite{Ross}-- leads to faster and better solutions with less training data then relying on less-informed RL techniques.  With both feedforward and recurrent neural predictors, we demonstrate stochastic gradient procedures to solve high dimensional continuous control problems as well as a partially observed dependency parsing task from raw image data. Backing our empirical findings, we provide a comprehensive theoretical study of IL that demonstrates we can expect \textit{exponentially} lower sample complexity for learning with \textit{AggrevateD} then with Reinforcement Learning algorithms. In both practice and in theory \drew{should we carefullly note this int he appendix since this has been a point of confusion for some folks?} we observe that the approach can achieve performance beyond that of the demonstrator when the demonstrator is sub-optimal. \drew{Needs some work. bb take pass.}
+Researchers have demonstrated state-of-the-art performance in sequential decision making problems (e.g., robotics control, structured prediction) with deep learning models.
+Often during the training phase for such sequential decision making problems, one usually has access to near-optimal oracles that can achieve good performance on the task.  We argue that, \textit{AggreVaTeD}-- a policy gradient extension of the Imitation Learning (IL) approach of \cite{ross2014reinforcement}-- can leverage such an oracle to achieve faster and better solutions with less training data than a less-informed Reinforcement Learning (RL) technique. Using both feedforward and recurrent neural predictors, we demonstrate stochastic gradient procedures for both a structured prediction task, dependency-parsing from raw image data, as well as a variety of high dimensional robotics control problems. Backing our empirical findings, we provide a comprehensive theoretical study of IL that demonstrates we can expect up to \textit{exponentially} lower sample complexity for learning with \textit{AggreVaTeD} than with RL algorithms. In fact, our results and theory indicate that the proposed approach can achieve performance superior to the oracle when when the demonstrator is sub-optimal. 
+
+
+%Deep learning models are advancing the state of the art in structured prediction, but increasingly require training that goes beyond traditional supervised learning regimes. Researchers have begun adopting reinforcement learning algorithms to train such structured predictors. We argue here that \textit{AggrevaTeD}-- a policy gradient extension of the Imitation Learning approach of \cite{ross2014reinforcement}-- leads to faster and better solutions with less training data than relying on less-informed RL techniques.  With both feedforward and recurrent neural predictors, we demonstrate stochastic gradient procedures to solve high dimensional continuous control problems as well as a partially observed dependency parsing task from raw image data. Backing our empirical findings, we provide a comprehensive theoretical study of IL that demonstrates we can expect \textit{exponentially} lower sample complexity for learning with \textit{AggrevateD} than with Reinforcement Learning algorithms. In both practice and in theory %\drew{should we carefullly note this int he appendix since this has been a point of confusion for some folks?} 
+%we observe that our approach can even achieve performance beyond that of the demonstrator when the demonstrator is sub-optimal. 
+
 \end{abstract}
 
 
 
 %\vspace{-10pt}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Introduction}
-\label{sec:intro}
-\BB{The paper does not discuss structured prediction much. We could either make it more prominent in the introduction and throughout, or ignore it (and remove from title) until the experimental results where we say something about how we can also use for structured prediction.} \drew{I think the paper is supposed to be saying IL > RL for structured prediction,and demonstrating the application of IL to deep networks. I think it's basically a paper teaching people how/when to use IL, particularly to train networks. How do we get it there?} 
-A fundamental challenge in artificial intelligence, robotics, and controls, is to find a policy that maps state to actions to minimize accumulated cost or achieve a goal. A promising approach to this problem is Imitation Learning (IL), which automatically learns a policy from expert demonstrations.  IL has become an important tool in a range of fields including robotics \cite{Ross2011_AISTATS} \drew{Is that the right ref}, statistical inference \cite{ross2011_CVPR,sun2016learning}, and language parsing \cite{chang2015learning_dependency}. 
+A fundamental challenge in artificial intelligence, robotics, and language processing is to reason, plan, and make a sequence of decisions to minimize accumulated cost or achieve a long-term goal. Reinforcement Learning (RL), especially deep RL, has dramatically advanced the state of the art in sequential decision making in high-dimensional robotics control tasks as well as in playing video and board games~\cite{schulman2015trust,silver2016mastering}. Though conventional supervised learning of deep models has been pivotal in advancing performance in sequential structured prediction problems, researchers are starting to utilize deep RL methods to achieve better performance~\cite{ranzato2015sequence,bahdanau2016actor,li2016deep}. Often in structured prediction tasks, future predictions from the learner are dependent on the history of previous predictions; thus, a poor prediction early on can yield accumulated loss (cost) for future predictions. Viewing the predictor as a \emph{policy} $\pi$, deep RL algorithms are able reason about the the future accumulated cost on a sequential decision making process whether it is a traditional robotics control problem or a sequential structured prediction task.
 
-Classical imitation learning \cite{abbeel2004apprenticeship,syed2008apprenticeship,ziebart2008maximum,finn2016guided,ho2016generative} learns a policy from a fixed-size dataset pre-collected from experts. The learned policy intends to match the expert's behaviour in terms of either the expected feature counts of visited states (e.g., MaxEnt \cite{ziebart2008maximum}) or the entire distribution of demonstrated trajectories \cite{ho2016generative}. A pernicious problem with these classical methods is that they require the training and test data to be sampled from the same distribution.  This is very difficult to enforce in practice, and, as a result, policies learned by these methods can fail spectacularly in real-world scenarios~\cite{ross2010efficient}.
+In contrast with reinforcement learning methods, well-known \emph{imitation learning} (IL) and structured prediction algorithms such as SEARN \cite{daume2009search}, DaD \cite{venkatraman2015improving}, AggreVaTe \cite{ross2014reinforcement}, and LOLS \cite{chang2015learning} reduce the sequence prediction problem to supervised learning by leveraging one special property of sequence prediction problem: at training time we usually have a (near) optimal \emph{cost-to-go oracle}. At any point along the sequential prediction process (i.e. state or partially completed structured prediction), the oracle is able to select the next (near)-best action. 
 
-\drew{I feel we are talking a lot about IL, and not about our contribution...}
+Concretely, the above methods assume access to an oracle\footnote{Expert, demonstrator, and oracle are used interchangeably.} that provides an optimal or near-optimal action and the future accumulated loss, also called the cost-to-go $Q^*$. For robotics control problems, this oracle may come from a human expert guiding the robot during the training phase~ \cite{abbeel2010autonomous,mulling2013learning} or from an optimal MDP solver~\cite{Ross2011_AISTATS,kahn2016plato} that may be too slow to use at test time. Similarly, for structured prediction problems, an oracle can be constructed by combinatorial optimization (i.e. beam search) or through a clairvoyant greedy algorithm~\cite{daume2009search,ross2013contextual,rhinehart2015visual,chang2015learning_dependency} that is near-optimal on the task specific performance metric (e.g., cumulative reward, IoU, UAS score, BLEU) given the training data's ground truth.
 
-Interactive learning approaches to IL such as SEARN \cite{daume2009search}, DAgger \cite{Ross2011_AISTATS}, AggreVaTe \cite{ross2014reinforcement} and LOLS \cite{chang2015learning}, interleave learning and testing procedures to overcome the data mismatch issue and, as a result, work well in practical applications. 
-Interactive approaches also provide strong theoretical guarantees through a reduction to no-regret online learning \cite{Zinkevich2003_ICML,shalev2012online}. For example, with the proper assumptions, AggreVaTe \cite{ross2014reinforcement} is guaranteed to learn a policy that performs as well as an optimal expert and to robustly degrade when the learner is imperfect.% and even outperform a sub-optimal expert 
-\drew{Changed aboved. See if it helos.}
+Such an oracle, however, is only available during training time (e.g. when there is access to ground truth). Thus, the goal is to learn a policy, $\tilde \pi^*$ with the help of the oracle $(\pi^*, Q^*)$ during the training session such that $\tilde \pi^*$ achieves similar quality performance at test time when the oracle is unavailable to query. In contrast, reinforcement learning methods initialize with an often random policy $\pi_0$ or cost-to-go (accumulated loss) $Q_0$ predictor which may be far from the optimal. The optimal policy (or cost-to-go) must be found through a tradeoff of dithering, directed exploration, and exploitation.
 
-Interactive IL is often framed as \emph{Data Aggregation}: in every episode, the algorithm first collects data by executing the current learned policy and querying an expert for feedback, it next aggregates the new data with it's existing dataset, and finally updates the policy by batch supervised learning on the aggregated dataset (e.g., an optimal cost-sensitive oracle). One drawback of these approaches is that they do not seem to scale well to complex tasks. This is frustrating: recent advances in Reinforcement Learning (RL), have been able to solve a range of problems including challenging robotics tasks, video games, and board games \cite{schulman2015trust,duan2016benchmarking,silver2016mastering}. With expert demonstrations, intuitively, IL should \emph{outperform} RL methods, but previous IL algorithms do not seem to scale well to these tasks. \BB{It would be nice if the previous sentence were true. Is it? if so we need to cite, and *ideally* we would come back to this in the experimental results somehow. If it's not true we need to change the motivation here. It would also lessen the impact of the statement at the end of the introduction about IL $>$ RL, which seems obvious. }
-\drew{I'm not sure the sentence is true. I think IL $>$ RL is completely non-obvious to our deep colleagues. Hal and John always use the fully online version of aggrevated for all their examples.  would say that it's a misunderstanding that says one has to aggregate, but one that we are correcting here.}
+%and action (or next prediction) pair, what is the minimum final loss if one starts to behave or predict optimally afterwards. Such oracles exist in practical applications: the oracle can be provided by expert demonstration or optimal MDP solvers \cite{Ross2011_AISTATS,kahn2016plato} in robotics applications, by optimal (i.e., brute-force search) or clairvoyant greedy search algorithms with access to ground-truth from training data in language tasks \cite{daume2009search,chang2015learning_dependency}. In general, given the performance metric (e.g., cumulative reward, UAS score, BLEU) of a sequential prediction task, one can often have access to a near-optimal cost-to-go oracle during training time. The learning task is then to learn a policy with the help of the oracle during training session, such that the learned policy can achieve high quality performance in test time when the oracle is not available.
 
-In this paper we attack the problem of reward-aware imitation learning, similar to the setting in SEARN, AggreVaTe and LOLS, where one considers the reward-to-go of the expert (not just  simple agreement with the expert at each step). \drew{Is this helping Samy Bengio understand?} The final goal of these methods is to train a policy that can achieve maximum total reward. \drew{Given the target perahps these should be losses?}
-With the goal of extending imitation learning to challenging tasks such as high-dimensional continuous control in robotics, we combine our approach with ideas from \emph{policy search}. We provide a framework called \emph{Differentiable  Imitation Learning} (DIL) \drew{Make macro. I don't like DIL.} which closely follows the reduction framework from AggreVaTe \cite{ross2014reinforcement} to retain the theoretical guarantees to the extent possible. DIL provides two gradient update procedures: a regular gradient update procedure developed from Online Gradient Descent (OGD) \cite{Zinkevich2003_ICML} and a natural gradient update procedure motivated by Exponential Gradient Descent (EG) \cite{shalev2012online} \drew{This is a novel motivation, but why don't we cit the derivation of natural gradient and then relate to EG. I think they have fundamentally different theoretical properties so I'm sketpical to say the least.}. We provide detailed derivations of unbiased estimations of policy gradients in IL and their variance-reduced variants \cite{greensmith2004variance}. 
 
-We demonstrate our approach by learning neural network polices on various robotics simulators with continuous state and action spaces, and a Dependency Parsing task on Handwritten Algebra with raw image data \cite{duyckpredicting}. We show DIL can achieve expert-level performance and even \emph{super-expert} performance, which rarely can be achieved by other non-interactive IL approaches. We also show that DIL can handle partial observable settings by using LSTM-based policies. Finally, we compare our approach to policy gradient RL algorithms and show that IL can learn much faster than RL in practice. 
+%For instance for dependency parsing \cite{chang2015learning,chang2015learning_dependency}, one can easily build an oracle acting as an optimal policy using the ground-truth parse trees in the training data. Computing optimal cost-to-go from any particular state and action pair \arun{what if the state-action pair are not in the ground truth tree} will be easier by simply rolling out the dynamical oracle to the end and then calculating Unlabeled Attachment Score (assume UAS is the objective). For part-of-speech tagging, one can simply fake an expert using ground-truth labels and compute the optimal cost-to-go using the hamming loss \cite{daume2009search,Ross2011_AISTATS}. In general, given the objective loss (e.g., UAS score, Hamming) of a sequential prediction task, one can often utilize ground-truth in the training data to build an optimal expert.
 
-In addition to providing a set of practical algorithms, we provide a comprehensive  theoretical study of IL on discrete MDPs. We design a special MDP structure to demonstrate that imitation learning can be exponentially more sample efficient than any RL algorithm. For general discrete MDPs, we provide a regret upper bound for AggreVaTe with EG. The regret upper bound shows IL can still learn significantly faster than RL in this more general MDP framework. We provide a regret lower bound for any IL algorithm, which demonstrates that AggreVaTe is near-optimal. Both the experimental results and the theoretical results indicate that: 
+The existence of oracle can be exploited to alleviate this blind learning by trial and error; one can \emph{imitate} the oracle to speed up learning process. A classic IL method is to collect data from running the demonstrator or oracle and train a regressor or classifier via supervised learning. These methods \cite{abbeel2004apprenticeship,syed2008apprenticeship,ratliff2006maximum,ziebart2008maximum,finn2016guided,ho2016generative} learn either a policy $\tilde \pi^*$ or $\tilde Q^*$ from a fixed-size dataset pre-collected from the oracle. A pernicious problem with these  methods is that they require the training and test data to be sampled from the same distribution.  This is very difficult to enforce in practice, and, as a result, policies learned by these methods can fail spectacularly in theory and in practice~\cite{ross2010efficient}. \emph{Interactive} approaches to IL such as SEARN \cite{daume2009search}, DAgger \cite{Ross2011_AISTATS}, AggreVaTe \cite{ross2014reinforcement} interleave learning and testing procedures to overcome the data mismatch issue and, as a result, work well in practical applications. Furthermore, these interactive approaches can provide strong theoretical guarantees between training time loss and test time performance through a reduction to no-regret online learning.
+
+
+%while retaining the nice theoretical guarantees from supervised learning literature. Hence in this work we consider a broader concept of \emph{Imitation Learning} (IL) where an expert is given and one can imitate the expert to train a good sequential decision predictor. Note that a large class of sequential structured prediction problems can be naturally modelled as IL \cite{Ross2011_AISTATS, chang2015learning}. Additionally, IL has also been extensively used to teach robots to perform complex tasks \cite{abbeel2004apprenticeship,finn2016guided}. Hence in this work we focus on IL for both structured prediction and high-dimensional continuous robot control. We emphasize here the the concept of expert is problem dependent. In robotics expert usually is the human demonstrator or a planner, while in structured prediction expert refers to the ground truth in the training data.
+
+
+%One family of imitation learning \cite{abbeel2004apprenticeship,syed2008apprenticeship,ziebart2008maximum,finn2016guided,ho2016generative} learns a policy from a fixed-size dataset pre-collected from experts. The learned policy intends to match the expert's behaviour in terms of either the expected feature counts of visited states (e.g., MaxEnt \cite{ziebart2008maximum}) or the entire distribution of demonstrated trajectories \cite{ho2016generative}. A pernicious problem with these classical methods is that they require the training and test data to be sampled from the same distribution.  This is very difficult to enforce in practice, and, as a result, policies learned by these methods can fail spectacularly in real-world scenarios~\cite{ross2010efficient}. Interactive learning approaches to IL such as SEARN \cite{daume2009search}, DAgger \cite{Ross2011_AISTATS}, AggreVaTe \cite{ross2014reinforcement} and LOLS \cite{chang2015learning}, interleave learning and testing procedures to overcome the data mismatch issue and, as a result, work well in practical applications. 
+%Interactive approaches also provide strong theoretical guarantees through a reduction to no-regret online learning \cite{Zinkevich2003_ICML,shalev2012online}. %For example, with the proper assumptions, AggreVaTe \cite{ross2014reinforcement} is guaranteed to learn a policy that performs as well as an optimal expert and to robustly degrade when the learner is imperfect
+
+In this work, we introduce \emph{AggreVaTeD}, a \emph{differentiable} version of AggreVaTe (Aggregate Values to Imitate \cite{ross2014reinforcement}) which extends interactive IL for use in complex structured prediction and challenging continuous robot control tasks.  We provide two gradient update procedures: a regular gradient update procedure developed from Online Gradient Descent (OGD) \cite{Zinkevich2003_ICML} and a natural gradient update procedure \cite{kakade2002natural,bagnell2003covariant} which we show is closely related to Exponential Gradient Descent (EG), another popular no-regret algorithm that often enjoys almost dimension-free property \cite{bubeck2015convex}\footnote{i.e., the regret bound depends on poly-log of the dimension of parameter space}. %\arun{maybe shorten this sentence to a quick list}. %We provide detailed derivations of unbiased estimations of policy gradients in IL and their variance-reduced variants \cite{greensmith2004variance} \arun{will this make sense to the reader at this point}?. 
+
+AggreVaTeD leverages the oracle to to learn rich polices oracle that can be represented by complicated non-linear function approximators. Our experiments with deep neural networks on various robotics control simulators and on a dependency parsing structured prediction task show that AggreVaTeD can achieve expert-level performance and even \emph{super-expert} performance when the oracle is sub-optimal, a result rarely achieved by non-interactive IL approaches. The differentiable nature of AggreVaTeD additionally allows us to employ LSTM-based policies to handle partially observable settings (e.g. observe only partial robot state). Empirical results demonstrate that by leveraging an oracle, IL can learn much faster than RL in practice.
+
+% We demonstrate our approach by learning neural network polices on various robotics simulators with continuous state and action spaces under both partially and fully observable setting , and a Dependency Parsing task on Handwritten Algebra with raw image data \cite{duyckpredicting}. We show AggreVaTeD can achieve expert-level performance and even \emph{super-expert} performance, which rarely can be achieved by other non-interactive IL approaches. We also show that AggreVaTeD can handle partial observable settings naturally by utilizing LSTM-based policies. We compare our approach to policy gradient RL algorithms and show that IL can learn much faster than RL in practice. %\drew{Again, I think the last point is the key one.}
+
+In addition to providing a set of practical algorithms, we develop a comprehensive theoretical study of IL on discrete MDPs. We construct an MDP that demonstrates exponentially better sample efficiency for IL than any RL algorithm. For general discrete MDPs, we provide a regret upper bound for AggreVaTeD with EG, which shows IL can learn significantly faster than RL. We provide a regret lower bound for any IL algorithm, which demonstrates that AggreVaTeD with EG is near-optimal. Our experimental and the theoretical results support the proposition: 
 \begin{displayquote}
-\emph{Imitation Learning $>$ Reinforcement Learning}, when we have access to expert demonstrations.
+Imitation Learning $\ge$ Reinforcement Learning for sequential prediction with near optimal cost-to-go oracles.
 \end{displayquote}
 
+%\todo{That's nice, but needs a rephrasing. Again, but yourself in Samy Bengio's shoes. What are you telling him?}
 
 
 
@@ -167,7 +195,10 @@ In addition to providing a set of practical algorithms, we provide a comprehensi
 
 \section{Preliminaries}
 %\vspace{-5pt}
-We consider a finite-horizon Markov Decision Process (MDP) $(\mathcal{S}, \mathcal{A}, P, R, \rho_0, H)$. Here,  $\mathcal{S}$ is a set of states and $\mathcal{A}$ is a set of actions; given time step $t$, $P_t$ is the transition dynamics such that for any $s_t\in\mathcal{S},s_{t+1}\in\mathcal{S}, a_t\in\mathcal{A}$, $P_t(s'|s_t, a_t)$ is the probability of transiting to state $s'$ from state $s$ by taking action $a$ at step $t$; $R$ is the reward distribution such that a reward $r_t$ at step $t$ is sampled from $R_t(\cdot | s_t, a_t)$ given state and action pair $s_t,a_t$ and we denote $\bar{r}_t$ as the expected reward; $\rho_0$ is the initial distribution of state, and $H\in\mathbb{N}^+$ is the finite horizon. 
+%\drew{Samy is not not considering an MDP at all. Tell him why he has to, or why he should think about policies at all.} 
+In order to develop algorithms that reason about long-term decision making, it is convenient to cast the problem into the Markov Decision Process (MDP) framework. The MDP framework consists of a set of states, actions (that come from a policy), cost (loss), and a model that transitions states given actions. For robotics control problems, the robot's configuration is the state, the controls (e.g. joint torques) are the actions, and the cost is related to achieving a task (e.g. distance walked). Though more nuanced, most sequential structured predictions can be cast into the same framework. The actions the the learner's (e.g. RNN's) predictions. The state is then the result of all the predictions made so far (e.g. the dependency tree constructed so far or the words translated so far). The cost received is the perfomance metric such as BLEU.
+
+Formally, a finite-horizon Markov Decision Process (MDP) is defined as $(\mathcal{S}, \mathcal{A}, P, C, \rho_0, H)$. Here, $\mathcal{S}$ is a set of states and $\mathcal{A}$ is a set of actions; given time step $t$, $P_t$ is the transition dynamics such that for any $s_t\in\mathcal{S},s_{t+1}\in\mathcal{S}, a_t\in\mathcal{A}$, $P_t(s'|s_t, a_t)$ is the probability of transiting to state $s'$ from state $s_t$ by taking action $a_t$ at step $t$; $C$ is the cost distribution such that a cost $c_t$ at step $t$ is sampled from $C_t(\cdot | s_t, a_t)$. Finally, we denote $\bar{c}_t$ as the expected reward, $\rho_0$ as the initial distribution of states, and $H\in\mathbb{N}^+$ as the finite horizon (max length) of the MDP. 
 
 %We consider the episodic learning setting. 
 We define a stochastic policy $\pi: \mathcal{S}\times\mathcal{A}\to [0,1]$, which computes the probability of executing action $a$ at state $s$. The distribution of trajectories $\tau = (s_1, a_1, \hdots,a_{H-1}, s_H)$ is deterministically dependent on $\pi$ and the MDP, and is defined as
@@ -191,57 +222,61 @@ d_t^{\pi}(s_{t}) = \sum_{\{s_i,a_i\}_{i\leq t-1}} &\rho_{0}(s_1)\prod_{i=1}^{t-1
 %\mu(\pi) = \sum_{t=0}^H  \mathop{\mathbb{E}}_{s_t\sim d_t^{\pi}}\mathop{\mathbb{E}}_{a_t\sim \pi(\cdot| s_t)} r(s_t, a_t). 
 %\end{align}
 
-The expected average reward of a policy $\pi$ can be defined with respect to $\rho_{\pi}$ or $\{d_t^{\pi}\}$:
+The expected average cost of a policy $\pi$ can be defined with respect to $\rho_{\pi}$ or $\{d_t^{\pi}\}$:
 \begin{align}
-\mu(\pi) &= \mathop{\mathbb{E}}_{\tau\sim \rho_{\pi}}[\sum_{t=1}^H \bar{r}(s_t,a_t)] \nonumber \\
-&= H\mathop{\mathbb{E}}_{s,a\sim \bar{d}^{\pi}(s)\pi(a|s)}[\bar{r}(s,a)].\nonumber
+\mu(\pi) &= \mathop{\mathbb{E}}_{\tau\sim \rho_{\pi}}[\sum_{t=1}^H \bar{c}(s_t,a_t)]  = H\mathop{\mathbb{E}}_{s,a\sim \bar{d}^{\pi}(s)\pi(a|s)}[\bar{c}(s,a)].\nonumber
 \end{align}
 
 
-We define the state-action value $Q_t^{\pi}(s,a)$ for policy $\pi$ at time step $t$ as:
+We define the state-action value $Q_t^{\pi}(s,a)$ (i.e., cost-to-go) for policy $\pi$ at time step $t$ as:
 \begin{align}
 &Q_t^{\pi}(s_t,a_t) %= r(s_t,a_t) + \mathop{\mathbb{E}}[\sum_{i=t+1}^H r(s_i,a_i)]\nonumber\\
-&=\bar{r}(s_t,a_t) + \mathop{\mathbb{E}}_{s\sim P_t(\cdot|s_t,a_t),a\sim\pi(\cdot|s)}Q^\pi_{t+1}(s,a). \nonumber
+&=\bar{c}(s_t,a_t) + \mathop{\mathbb{E}}_{s\sim P_t(\cdot|s_t,a_t),a\sim\pi(\cdot|s)}Q^\pi_{t+1}(s,a). \nonumber
 \end{align} where the expectation is taken over the randomness of the policy $\pi$ and the MDP. 
 
-$\pi^{e}$ is the expert policy, which may or may not be optimal (i.e., $\pi^e \not\in \arg\max_{\pi} \mu(\pi)$), and $Q_t^{e}$ are the corresponding $Q$ functions. Throughout the paper, we assume $Q_t^{e}(s,a)$ is known or can be estimated without bias (e.g., by rolling out $\pi^e$: starting from state $s$, applying action $a$, and then following $\pi^e$ for $H-t$ steps). Expert demonstrations may be given from many sources including recordings of human behavior in video games \cite{Ross2011_AISTATS}, the output of motion planners or feedback controllers in robotics \cite{kahn2016plato}, or ground-truth  dynamical oracles in natural language processing \cite{chang2015learning_dependency,chang2015learning}.
+We define $\pi^{e}$ as the expert policy and $Q^e(\cdot,\cdot)$ as the expert's cost-to-go oracle (note $\pi^e$ may or may not be optimal, i.e., $\pi^e \not\in \arg\max_{\pi} \mu(\pi)$), and $Q_t^{e}$ are the corresponding $Q$ functions. Throughout the paper, we assume $Q_t^{e}(s,a)$ is known (e.g., Hamming loss, negative UAS score) or can be estimated without bias (e.g., by rolling out $\pi^e$: starting from state $s$, applying action $a$, and then following $\pi^e$ for $H-t$ steps). %Expert demonstrations may be given from many sources including recordings of human behavior in video games \cite{Ross2011_AISTATS}, the output of motion planners or feedback controllers in robotics \cite{kahn2016plato}, or ground-truth  information in natural language processing \cite{chang2015learning_dependency,chang2015learning}.
 
-When $\pi$ is represented by a function approximator, we use the notation $\pi_{\theta}$ to represent the policy parametrized by $\theta\in \mathbb{R}^{d}$: $\pi(\cdot|s;\theta)$. In this work we specifically consider optimizing policies in which the parameter dimension $d$ may be large. 
-
+When $\pi$ is represented by a function approximator, we use the notation $\pi_{\theta}$ to represent the policy parametrized by $\theta\in \mathbb{R}^{d}$: $\pi(\cdot|s;\theta)$. In this work we specifically consider optimizing policies in which the parameter dimension $d$ may be large.  We also consider partial observable setting in our experiments, where the policy $\pi(\cdot|o_1,a_1,...,o_t;\theta)$ is defined over the whole history of partial observations and actions ($o_t$ is generated from the hidden state $s_t$). We use LSTM-based policy \cite{duan2016benchmarking} where LSTMs' hidden states provide a compressed feature of the history.
 
 
 
 %\vspace{-5pt}
 \section{Differentiable Imitation Learning}
 \label{sec:alg}
-\citet{ross2014reinforcement} provide a reduction of imitation learning and structured prediction to no-regret online learning. In this section, we leverage the reduction to derive \emph{policy gradient methods} for imitation learning and structured prediction suitable for policies represented by expressive function approximators (e.g., neural networks).
+\citet{ross2014reinforcement} provide a reduction of imitation learning and structured prediction to no-regret online learning. In this section, we leverage the reduction to derive \emph{policy gradient methods} for imitation learning and structured prediction suitable for policies represented by expressive differentiable function approximators (e.g., modern deep neural networks).
 
-The fundamental idea in \citet{ross2014reinforcement} is to use a no-regret online learner to update policies using the following loss function\footnote{ Abuse of notation: though we call $\ell_n$ loss, we are minimizing \emph{regret}, due to the fact that $\ell_n$ relates to the reward.} at each episode $n$:
+The fundamental idea in \citet{ross2014reinforcement} is to use a no-regret online learner to update policies using the following loss function at each episode $n$:
 \begin{align}
 \label{eq:general_loss}
 \ell_{n}(\pi) = \frac{1}{H}\sum_{t=1}^H \mathop{\mathbb{E}}_{s_t\sim d_t^{\pi_n}}\Big[\mathop{\mathbb{E}}_{a \sim \pi(\cdot | s_t)}[Q_t^e(s_t,a)]\Big].
 \end{align}
-The loss function intuitively encourages the learner to find a policy that maximizes the expert's reward-to-go \emph{under the state distribution resulting from the current learned policy $\pi_n$}.
+The loss function intuitively encourages the learner to find a policy that minimize the expert's cost-to-go \emph{under the state distribution resulting from the current learned policy $\pi_n$}.
 %\BB{Maybe explain in words what this loss function is penalizing/encouraging}
-Specifically, \citet{ross2014reinforcement} suggest an algorithm named \emph{AggreVaTe} that uses the Follow-the-Leader (FTL)\cite{shalev2012online} to update policies:
-\begin{align}
-\pi_{n+1} = \arg\max_{\pi\in\Pi} \sum_{i=1}^{n}\ell_n(\pi),
-\end{align} where $\Pi$ is a pre-defined convex policy set. 
-When $\ell_n(\pi)$ is strongly concave with respect to $\pi$ and $\pi^e\in \Pi$, after $N$ iterations AggreVaTe with FTL is guaranteed to find a policy $\hat{\pi}$ which is almost as good as the expert:
+Specifically, \citet{ross2014reinforcement} suggest an algorithm named \emph{AggreVaTe} (Aggregate Values to Imitate) that uses the Follow-the-Leader (FTL)\cite{shalev2012online} to update policies:$\pi_{n+1} = \arg\min_{\pi\in\Pi}\sum_{i=1}^{n}\ell_n(\pi)$, %\sum_{i=1}^{n}\ell_n(\pi)
+%\begin{align}
+%\pi_{n+1} = \arg\min_{\pi\in\Pi} %\sum_{i=1}^{n}\ell_n(\pi), \nonumber
+%\end{align} 
+where $\Pi$ is a pre-defined convex policy set. 
+When $\ell_n(\pi)$ is strongly convex with respect to $\pi$ and $\pi^e\in \Pi$, after $N$ iterations AggreVaTe with FTL can find a policy $\hat{\pi}$::
 \begin{align}
 \label{eq:AggreVaTe_analysis}
-\mu(\hat{\pi}) \geq \mu(\pi^e) - O(\ln(N)/{N}).
-\end{align}
-The problem with AggreVaTe is that it needs to exactly solve a batch optimization procedure in each episode. When $\pi$ is represented by large, non-linear function approximators, the $\arg\max$ procedure generally takes more and more computation time as $n$ increases. For example, Stochastic Gradient Descent (SGD) takes more and more time to traverse the ever-increasing dataset. 
-It is also worth pointing out that the implementation of AggreVaTe with FTL as suggested by Alg.1 in \cite{ross2014reinforcement} cannot guarantee that it will find a policy subject to the analysis in Eq.~\ref{eq:AggreVaTe_analysis}, if the loss functions are concave (e.g., linear) instead of strongly concave.
+\mu(\hat{\pi}) \leq \mu(\pi^e) - \epsilon_n + \tilde{O}({1}/{N}),
+\end{align} where $\epsilon_n =[\sum_{i=1}^N\ell_n(\pi^e) - \min_{\pi^*}\sum_{i=1}^N\ell_n(\pi^*)]/N$. We would like to point out that $\epsilon_n\geq 0$ and the above inequality indicates that $\hat{\pi}$ can outperform $\pi^e$ when $\pi^e$ is not (locally) optimal (i.e., $\epsilon_n$ is strictly positive). Our experimental results also support this observation.
+
+A naive implementation of AggreVaTe that aggregates the values (as the name suggests) will require to exactly solve a batch optimization procedure in each episode. 
+%\drew{Huh? It needs only an online learner. 
+%This may be a misunderstanding we should correct, but....} 
+When $\pi$ is represented by large, non-linear function approximators, the $\arg\min$ procedure generally takes more and more computation time as $n$ increases. For example, Stochastic Gradient Descent (SGD) takes more and more time to traverse the ever-increasing dataset. 
+%It is also worth pointing out that the implementation of AggreVaTe with FTL as suggested by Alg.1 in \cite{ross2014reinforcement} cannot guarantee that it will find a policy subject to the analysis in Eq.~\ref{eq:AggreVaTe_analysis}, if the loss functions are concave (e.g., linear) instead of strongly concave. \drew{True, but perhaps les important then the non-convexity of a general NN.}
 
 
-Gradient methods such as Online Mirror Descent \cite{shalev2012online} are popular for online learning due to tehir efficiency. Therefore, instead of applying FTL, we consider two special cases of the Online Mirror update: Online Gradient Ascent (OGA) \cite{Zinkevich2003_ICML}  and Exponential Gradient (EG) \cite{shalev2012online}, which lead to a regular policy gradient ascent algorithm and a natural policy gradient ascent algorithm, respectively. Also, when applying OGA and EG to $\{\ell_n(\pi)\}$, one can show that Eq.~\ref{eq:AggreVaTe_analysis} will hold (with $O(1/\sqrt{N})$), as long as $\ell_n(\pi)$ is concave. 
+Gradient methods such as Online Mirror Descent \cite{shalev2012online} are popular for online learning due to their efficiency. Therefore, instead of applying FTL, we consider two special cases of the Online Mirror update: Online Gradient Descent (OGD) \cite{Zinkevich2003_ICML}  and Exponential Gradient Descent (EG) \cite{shalev2012online}, which lead to a regular stochastic policy gradient descent algorithm and a natural policy gradient algorithm, respectively. Also, when applying OGD and EG to $\{\ell_n(\pi)\}$, one can show that Eq.~\ref{eq:AggreVaTe_analysis} will hold (with $O(1/\sqrt{N})$), as long as $\ell_n(\pi)$ is convex with respect to $\pi$. 
 
 
 
-\subsection{Gradient Ascent}
-One way to overcome the computational challenges of AggreVaTe is to replace FTL with Online Gradient Ascent \cite{Zinkevich2003_ICML}, another classic no-regret online algorithm. %Recall that we use $\pi_{\theta_n}$ to represent the parametrized policy $\pi_n$. 
+\subsection{Gradient Descent}
+One way to overcome the computational challenges of AggreVaTe is to replace FTL with Online Gradient Descent \cite{Zinkevich2003_ICML}, another classic no-regret  algorithm. %Recall that we use $\pi_{\theta_n}$ to represent the parametrized policy $\pi_n$. 
+%\todo{Important to note the analysis requires more then SGD-- data is not iid. as policy changes.}
 
 For discrete actions, the gradient of $\ell_n(\pi_{\theta})$ with respect to the parameters $\theta$ of the policy can be computed as
 \begin{align}
@@ -260,31 +295,29 @@ With this reformulation, the gradient with respect to $\theta$ is
 \label{eq:regular_con_gradient}
 \nabla_{\theta}\ell_n(\theta) =\frac{1}{H} \mathop{\mathbb{E}}_{\tau\sim\rho_{\pi_{\theta_n}}}\sum_{t=1}^H \frac{\nabla_{\theta}\pi(a_t|s_t;\theta)}{\pi(a_t|s_t;\theta_n)}Q^e_t(s_t,a_t).
 \end{align}
-The above gradient computation enables a very efficient update procedure with online gradient ascent:
+The above gradient computation enables a very efficient update procedure with online gradient descent:
 \begin{align}
 \label{eq:ogd_form}
-\theta_{n+1} = \theta_n + \mu_n \nabla_{\theta}\ell_n(\theta)|_{\theta = \theta_n}
-\end{align}
-When $\ell_n(\theta)$ is concave with respect $\theta$, the analysis of AggreVaTe from \cite{ross2014reinforcement} holds since Eq.~\ref{eq:ogd_form} essentially performs Online Gradient Ascent on $\{\ell_n(\theta)\}$.
+\theta_{n+1} = \theta_n - \mu_n \nabla_{\theta}\ell_n(\theta)|_{\theta = \theta_n}
+\end{align} where $\mu_n$ is the learning rate.
+%When $\ell_n(\theta)$ is convex with respect $\theta$, the analysis of AggreVaTe from \cite{ross2014reinforcement} holds since Eq.~\ref{eq:ogd_form} essentially performs OGD on $\{\ell_n(\theta)\}$.
 %\BB{Wrt previous sentence: prove or explain why} \BB{I am having trouble understanding the next sentence, are you trying to contrast the algorithm in R\&B with the above approach?} On the other hand, though the reduction framework from \cite{ross2014reinforcement} does not rely on any specific no-regret online learner, the most common implementation of AggreVaTe using data aggregation as shown in Alg.1 in \cite{ross2014reinforcement} can actually only work for strongly convex loss, as FTL can only guarantee no-regret property for strongly convex loss.
 
 
-\subsection{Policy Updates with Natural Gradient Ascent}
+\subsection{Policy Updates with Natural Gradient Descent}
 %Natural gradient ascent has been successfully used in RL \cite{bagnell2003covariant,schulman2015trust}. The advantage of being parametric affine-invariant makes natural gradient update outperforms classic gradient methods such as REINFORCE \cite{williams1992simple} and achieves state-of-art results in challenging RL problems. 
-In this section, we derive a natural gradient update procedure for imitation learning inspired by the success of natural gradient ascent in RL~\cite{kakade2002natural,bagnell2003covariant,schulman2015trust}. First, we show that Exponential Gradient Ascent (EG) can be leveraged to speed up imitation learning in discrete Markov Decision Processes (MDPs). Then we extend EG to the continuous state and action setting, where we show that, with several steps of approximation, EG leads to a natural gradient update procedure. 
+In this section, we derive a natural gradient update procedure for imitation learning inspired by the success of natural gradient descent in RL~\cite{kakade2002natural,bagnell2003covariant,schulman2015trust}. First, we show that Exponential Gradient Ascent (EG) can be leveraged to speed up imitation learning in discrete MDPs. Then we extend EG to continuous MDP, where we show that, with three steps of approximation, EG leads to a natural gradient update procedure. 
 
 \subsubsection{Exponential Gradient in Discrete MDPs}
-For notational simplicity, for each state $s\in\mathcal{S}$, we represent the policy $\pi(\cdot |s)$ as a discrete probability vector $\pi^s \in \Delta(|\mathcal{A}|)$, where $\Delta(K)$ denotes a $K$-dimension simplex. We also represent $d_t^{\pi}$ as a $|\mathcal{S}|$-dimension probability vector from $|\mathcal{S}|$-d simplex, consisting of $d_t^{\pi}(s), \forall s\in\mathcal{S}$. 
-For each $s$, we use $Q^e_t(s)$ to denote the $|\mathcal{A}|$-dimension vector consisting of the state-action value $Q^e_t(s,a)$ for all $a\in\mathcal{A}$. With this notation, the loss function $\ell_n(\pi)$ from Eq.~\ref{eq:general_loss} can now be written as:
-\begin{align}
-%\label{eq:linear_general_loss}
-\ell_n(\pi) = \frac{1}{H}\sum_{t=1}^H \sum_{s\in\mathcal{S}} d_t^{\pi_n}(s)( \pi^s\cdot Q^e_t(s)), \nonumber
-\end{align} where $a\cdot b$ represents the inner product between vectors $a$ and $b$, and $a*b$ represent the vector element-wise product.
-
-Exponential Gradient updates $\pi$ as follows: $\forall s\in\mathcal{S}$,
+For notational simplicity, for each state $s\in\mathcal{S}$, we represent the policy $\pi(\cdot |s)$ as a discrete probability vector $\pi^s \in \Delta(A)$, where $\Delta(K)$ denotes a $K$-dimension simplex. We also represent $d_t^{\pi}$ as a ${S}$-dimension probability vector from $S$-d simplex, consisting of $d_t^{\pi}(s), \forall s\in\mathcal{S}$. 
+For each $s$, we use $Q^e_t(s)$ to denote the $A$-dimension vector consisting of the state-action cost-to-go $Q^e_t(s,a)$ for all $a\in\mathcal{A}$. With this notation, the loss function $\ell_n(\pi)$ from Eq.~\ref{eq:general_loss} can now be written as: $\ell_n(\pi) = \frac{1}{H}\sum_{t=1}^H \sum_{s\in\mathcal{S}} d_t^{\pi_n}(s)( \pi^s\cdot Q^e_t(s))$,
+%\begin{align}
+%\ell_n(\pi) = \frac{1}{H}\sum_{t=1}^H \sum_{s\in\mathcal{S}} d_t^{\pi_n}(s)( \pi^s\cdot Q^e_t(s)), \nonumber
+%\end{align}
+where $a\cdot b$ represents the inner product between vectors $a$ and $b$, and $a*b$ represent the vector element-wise product. Exponential Gradient updates $\pi$ as follows: $\forall s\in\mathcal{S}$,
 \begin{align}
 \label{eq:eg_argmax}
-\pi^s_{n+1} = \arg\max_{\pi\in\Delta(|\mathcal{A}|)}&\frac{1}{H}\sum_{t=1}^H \sum_{s\in\mathcal{S}} d_t^{\pi_n}(s)\big( \pi^s\cdot Q^e_t(s)\big) \nonumber \\ &-\sum_{s\in\mathcal{S}}\frac{\bar{d}^{\pi_n}(s)}{\mu_{n,s}}KL(\pi_s \| \pi^s_n), 
+\pi^s_{n+1} = \arg\min_{\pi\in\Delta(A)}&\frac{1}{H}\sum_{t=1}^H \sum_{s\in\mathcal{S}} d_t^{\pi_n}(s)\big( \pi^s\cdot Q^e_t(s)\big) \nonumber \\ &+\sum_{s\in\mathcal{S}}\frac{\bar{d}^{\pi_n}(s)}{\mu_{n,s}}KL(\pi_s \| \pi^s_n), 
 \end{align} 
 %where $KL(q\|p)$ is the KL-divergence between two probability vectors $q$ and $p$, 
 which leads to the following closed-form update: $\forall s\in\mathcal{S}$,
@@ -299,73 +332,80 @@ which leads to the following closed-form update: $\forall s\in\mathcal{S}$,
 %\max_{\pi}\sum_{n=1}^N\ell_n(\pi) - \sum_{n=1}^N \ell_n(\pi_n) \leq O(|\mathcal{S}|Q_{max}^e\sqrt{\ln(|\mathcal{A}|N)}), \nonumber
 %\end{align} where we define $Q_{max}^e = \max_{t,s,a}Q^e_t(s,a)$.
 
-\subsubsection{Extensions to Continuous MDPs}
+\subsubsection{Continuous MDPs}
 We now consider the problem of updating the parametrized policy $\pi_{\theta}$. Replacing summations by integrals, Eq.~\ref{eq:eg_argmax} can be written as:
 \begin{align}
 \label{eq:continuous_eg}
-\theta = \arg\max_{\theta}\frac{1}{H}& \sum_{t=1}^H  \mathop{\mathbb{E}}_{s\sim d_t^{\pi_{\theta_n}}}\mathop{\mathbb{E}}_{a\sim\pi(\cdot|s;\theta)}[Q_t^e(s,a)] \nonumber\\
-& - \mathop{\mathbb{E}}_{s\sim\bar{d}^{\pi_n}}KL(\pi_{\theta} ||\pi_{\theta_n})/\mu_{n,s}.
+\theta = \arg\min_{\theta}\frac{1}{H}& \sum_{t=1}^H  \mathop{\mathbb{E}}_{s\sim d_t^{\pi_{\theta_n}}}\mathop{\mathbb{E}}_{a\sim\pi(\cdot|s;\theta)}[Q_t^e(s,a)] \nonumber\\
+& + \mathop{\mathbb{E}}_{s\sim\bar{d}^{\pi_n}}KL(\pi_{\theta} ||\pi_{\theta_n})/\mu_{n,s}.
 \end{align} 
 
-The first part of the RHS of the above equation is $\ell_n(\theta)$. We first approximate $\ell_n(\theta)$ by its first-order Taylor expansion: $\ell_n(\theta)\approx \ell_n(\theta_n) + \nabla_{\theta}\ell_n(\theta_n) \cdot (\theta - \theta_n)$. When $\theta$ and $\theta_n$ are close, this is a valid local approximation. 
+We first approximate $\ell_n(\theta)$ (the first part of the RHS of the above equation) by its first-order Taylor expansion: $\ell_n(\theta)\approx \ell_n(\theta_n) + \nabla_{\theta}\ell_n(\theta_n) \cdot (\theta - \theta_n)$. When $\theta$ and $\theta_n$ are close, this is a valid local approximation. 
 
-Second, we replace $KL(\pi_{\theta}||\pi_{\theta_n})$ by $KL(\pi_{\theta_n}||\pi_{\theta})$, which is again a local approximation since $KL(q||p)$ and $KL(p||q)$ are equal up to the second order \cite{kakade2002approximately,schulman2015trust}.
+Second, we replace $KL(\pi_{\theta}||\pi_{\theta_n})$ by $KL(\pi_{\theta_n}||\pi_{\theta})$, which is a local approximation since $KL(q||p)$ and $KL(p||q)$ are equal up to the second order \cite{kakade2002approximately,schulman2015trust}.
 
-Third, we approximate $KL(\pi_{\theta_n}||\pi_{\theta})$ by a second-order Taylor expansion around $\theta_n$, which enables us to approximate the penalization using the Fisher information matrix:
+Third, we approximate $KL(\pi_{\theta_n}||\pi_{\theta})$ by a second-order Taylor expansion around $\theta_n$, such that we can approximate the penalization using the Fisher information matrix:
 \begin{align}
 \mathop{\mathbb{E}}_{s\sim\bar{d}^{\pi_n}}KL(\pi_{\theta_n} || \pi_{\theta}) \approx (1/2)(\theta - \theta_n)^T I(\theta_n)(\theta-\theta_n), \nonumber
 \end{align} where the Fisher information matrix $I(\theta_n)=\mathop{\mathbb{E}}_{s,a\sim \bar{d}^{\pi_{\theta_n}}\pi_{\theta_n}(a|s)}\big(\nabla_{\theta_n}\log(\pi_{\theta_n}(a|s))\big)\big(\nabla_{\theta_n}\log(\pi_{\theta_n}(a|s)\big)^T$. 
 
 Inserting these three approximations into Eq.~\ref{eq:continuous_eg}, and solving for $\theta$, we reach the following update rule
 \begin{align}
-\theta_{n+1} = \theta_n + \mu_{n}I(\theta_n)^{-1}\nabla_{\theta}\ell_n(\theta)|_{\theta =\theta_n},
+\theta_{n+1} = \theta_n - \mu_{n}I(\theta_n)^{-1}\nabla_{\theta}\ell_n(\theta)|_{\theta =\theta_n},
 \end{align} which is similar to the natural gradient update rule developed in \cite{kakade2002natural} %\BB{shoudl maybe mention this citation at the beginning of the section} 
 for the RL setting. 
 \citet{bagnell2003covariant} provided another equivalent representation of the Fisher information matrix using trajectory distributions $\rho_{\pi_{\theta_n}}$:
 \begin{align}
 \label{eq:fisher_traj}
 I(\theta_n) = \frac{1}{H^2}\mathop{\mathop{\mathbb{E}}}_{\tau\sim \rho_{\pi_{\theta_n}}}\nabla_{\theta_n}\log(\rho_{\pi_{\theta_n}}(\tau))\nabla_{\theta_n}\log(\rho_{\pi_{\theta_n}}(\tau))^T,
-\end{align} where $\nabla_{\theta}\log(\rho_{\pi_{\tau}}(\tau))$ is the gradient of the log likelihood of the trajectory $\tau$which can be computed as $\sum_{t=1}^H\nabla_{\theta}\log(\pi_{\theta}(a_t|s_t))$. In the remainder of the paper, we use this Fisher information matrix representation, which yields much faster computation of the ascent direction $\delta\theta$, as we will explain in the next section.
+\end{align} where $\nabla_{\theta}\log(\rho_{\pi_{\tau}}(\tau))$ is the gradient of the log likelihood of the trajectory $\tau$ which can be computed as $\sum_{t=1}^H\nabla_{\theta}\log(\pi_{\theta}(a_t|s_t))$. In the remainder of the paper, we use this Fisher information matrix representation, which yields much faster computation of the descent direction $\delta\theta$, as we will explain in the next section.
 
 
 
 
 
 \section{Sample-Based Practical Algorithms}
-In the previous section, we derived a regular gradient update procedure and a natural gradient update procedure for imitation learning. Note that all of the computations of gradients and Fisher information matrices assumed it was possible to exactly compute expectations including $\mathop{\mathbb{E}}_{s\sim d^{\pi}}$ and $\mathop{\mathbb{E}}_{a\sim \pi(a|s)}$. In this section, we provide practical algorithms where we approximate the gradients and Fisher information matrices using finite samples collected during policy execution. 
+In the previous section, we derived a regular gradient update procedure and a natural gradient update procedure for IL. Note that all of the computations of gradients and Fisher information matrices assumed it was possible to exactly compute expectations including $\mathop{\mathbb{E}}_{s\sim d^{\pi}}$ and $\mathop{\mathbb{E}}_{a\sim \pi(a|s)}$. In this section, we provide practical algorithms where we approximate the gradients and Fisher information matrices using finite samples collected during policy execution. 
 
 \subsection{Gradient Estimation and Variance Reduction}
-We consider an episodic framework where given a policy $\pi_n$ at episode $n$, we roll out $\pi_n$ $K$ times to collect $K$ trajectories $\{\tau_i^{n}\}$, for $i\in [K]$. 
-
-For gradient $\nabla_{\theta}\ell_n(\theta_n)|_{\theta=\theta_n}$ in Eq.~\ref{eq:regular_dic_gradient},   designed for discrete actions, we can compute an unbiased estimate using $\{\tau_i^n\}_{i\in[K]}$:
+We consider an episodic framework where given a policy $\pi_n$ at episode $n$, we roll out $\pi_n$ $K$ times to collect $K$ trajectories $\{\tau_i^{n}\}$, for $i\in [K]$, $\tau_i^n=\{s_1^{i,n},a_1^{i,n},...\}$.  For gradient $\nabla_{\theta}\ell_n(\theta_n)|_{\theta=\theta_n}$ %in Eq.~\ref{eq:regular_dic_gradient},   designed for discrete actions, 
+we can compute an unbiased estimate using $\{\tau_i^n\}_{i\in[K]}$:
 \begin{align}
 \label{eq:gradient_finite_dic}
-\tilde{\nabla}_{\theta_n} = \frac{1}{HK}\sum_{i=1}^K\sum_{t=1}^H\sum_{a}\nabla_{\theta_n}\pi_{\theta_n}(a|s^{i,n}_t) Q_t^e(s^{i,n}_t, a),
-\end{align} and for the continuous setting (Eq.~\ref{eq:regular_con_gradient}), we have:
-\begin{align}
-\label{eq:gradient_finite_con}
-\tilde{\nabla}_{\theta_n} = \frac{1}{HK}\sum_{t=1}^H \frac{\nabla_{\theta_n}\pi_{\theta_n}(a^{i,n}_t|s_t^{i,n})}{\pi_{\theta_n}(a_t^{i,n}|s_t^{i,n})}Q_t^e(s_t^{i,n},a_t^{i,n}).
-\end{align}
-With the format of gradient estimation shown in Eq.~\ref{eq:gradient_finite_dic} and \ref{eq:gradient_finite_con}, we leverage the variance reduction techniques developed in the RL literature \cite{greensmith2004variance} to potentially decrease the variance of $\tilde{\nabla}_{\theta_n}$. Whenever we can afford to compute $V_t^e(s)$ (e.g., $\max_a Q_t^e(s,a)$ or roll out $\pi^e$ from $s$), we replace $Q_t^e(s_t^{i,n},a)$ in Eq.~\ref{eq:gradient_finite_dic} and Eq.~\ref{eq:gradient_finite_con} by the state-action advantage function $A^e_t(s_t^{i,n},a) = Q^e_t(s_t^{i,n},a) - V_t^e(s_t^{i,n})$. Using the advantage function, the gradient estimations become:
+&\tilde{\nabla}_{\theta_n} = \frac{1}{HK}\sum_{i=1}^K\sum_{t=1}^H\sum_{a}\nabla_{\theta_n}\pi_{\theta_n}(a|s^{i,n}_t) Q_t^e(s^{i,n}_t, a), \\
+&\label{eq:gradient_finite_con}
+\tilde{\nabla}_{\theta_n} = \frac{1}{HK}\sum_{i=1}^K\sum_{t=1}^H \frac{\nabla_{\theta_n}\pi_{\theta_n}(a^{i,n}_t|s_t^{i,n})}{\pi_{\theta_n}(a_t^{i,n}|s_t^{i,n})}Q_t^e(s_t^{i,n},a_t^{i,n}).
+\end{align} for discrete and  continuous setting respectively. %(Eq.~\ref{eq:regular_con_gradient}), we have:
+%\begin{align}
+%\label{eq:gradient_finite_con}
+%\tilde{\nabla}_{\theta_n} = \frac{1}{HK}\sum_{i=1}^K\sum_{t=1}^H \frac{\nabla_{\theta_n}\pi_{\theta_n}(a^{i,n}_t|s_t^{i,n})}{\pi_{\theta_n}(a_t^{i,n}|s_t^{i,n})}Q_t^e(s_t^{i,n},a_t^{i,n}).
+%\end{align}
+
+%With the format of gradient estimation shown in Eq.~\ref{eq:gradient_finite_dic} and \ref{eq:gradient_finite_con}, we leverage the variance reduction techniques developed in the RL literature \cite{greensmith2004variance} to potentially decrease the variance of $\tilde{\nabla}_{\theta_n}$. 
+Whenever we can afford to compute $V_t^e(s)$ (e.g., $\min_a Q_t^e(s,a)$), we can replace $Q_t^e(s_t^{i,n},a)$ in Eq.~\ref{eq:gradient_finite_dic} and Eq.~\ref{eq:gradient_finite_con} by the state-action advantage function $A^e_t(s_t^{i,n},a) = Q^e_t(s_t^{i,n},a) - V_t^e(s_t^{i,n})$. Using the advantage function, the gradient estimations become:
 \begin{align}
 &\tilde{\nabla}_{\theta_n} = \frac{1}{HK}\sum_{i=1}^K\sum_{t=1}^H\sum_{a}\nabla_{\theta_n}\pi_{\theta_n}(a|s^{i,n}_t) A_t^e(s^{i,n}_t, a), \label{eq:gradient_finite_dic_vr}\\
-&\tilde{\nabla}_{\theta_n} = \frac{1}{HK}\sum_{t=1}^H \frac{\nabla_{\theta_n}\pi_{\theta_n}(a^{i,n}_t|s_t^{i,n})}{\pi_{\theta_n}(a_t^{i,n}|s_t^{i,n})}A_t^e(s_t^{i,n},a_t^{i,n}), 
+&\tilde{\nabla}_{\theta_n} = \frac{1}{HK}\sum_{i=1}^K\sum_{t=1}^H \frac{\nabla_{\theta_n}\pi_{\theta_n}(a^{i,n}_t|s_t^{i,n})}{\pi_{\theta_n}(a_t^{i,n}|s_t^{i,n})}A_t^e(s_t^{i,n},a_t^{i,n}),
 \label{eq:gradient_finite_con_vr}
-\end{align} where Eq.~\ref{eq:gradient_finite_dic_vr} is for discrete action setting and Eq.~\ref{eq:gradient_finite_con_vr} for continuous action setting. One can verify that the gradients in Eq.~\ref{eq:gradient_finite_dic_vr} and \ref{eq:gradient_finite_con_vr} are still unbiased estimates of the gradient of $\ell_n(\theta_n)$.
+\end{align} where Eq.~\ref{eq:gradient_finite_dic_vr} is for discrete action setting and Eq.~\ref{eq:gradient_finite_con_vr} for continuous action setting. One can verify that the gradients in Eq.~\ref{eq:gradient_finite_dic_vr} and \ref{eq:gradient_finite_con_vr} are still unbiased and they usually have smaller variance \cite{greensmith2004variance}.
 
 
 
-The Fisher information matrix from Eq.~\ref{eq:fisher_traj} is approximated:
+The Fisher information matrix (Eq.~\ref{eq:fisher_traj}) is approximated as:
 \begin{align}
 \tilde{I}(\theta_n) &= \frac{1}{H^2K}\sum_{i=1}^K \nabla_{\theta_n}\log(\rho_{\pi_{\theta_n}}(\tau_i))\nabla_{\theta_n}\log(\rho_{\pi_{\theta_n}}(\tau_i))^T \nonumber\\
 & = S_n S_n^T,
-\end{align} where, for notation simplicity, we denote $S_n$ as a $d\times K$ matrix where the $i$'s th column is $\nabla_{\theta_n}\log(\rho_{\pi_{\theta_n}}(\tau_i))/(H\sqrt{K})$. Namely the Fisher information matrix is represented by a sum of $K$ rank-one matrices. For large policies represented by neural networks, $K\ll d$, and $\tilde{I}(\theta_n)$ is a low rank matrix. We therefore add a regularization $\lambda I_{d\times d}$ with small positive $\lambda$ to $\tilde{I}(\theta_n)$. Using the WoodBury Matrix Identity to implicitly invert $S_nS_n^T$, the final ascent direction is computed as:
-\begin{align}
-\label{eq:natural_finite}
-\delta_{\theta_n} = \frac{1}{\lambda}(\tilde{\nabla}_{\theta_n} - S_n(\lambda I+S_n^TS_n)^{-1}S_n^T\tilde{\nabla}_{\theta_n}).
-\end{align} The computational complexity of $\delta\theta_n$ is $O(K^2 d)$. In other words, the computation time of $\delta\theta_n$ scales linearly with the number policy parameters. 
+\end{align} where, for notation simplicity, we denote $S_n$ as a $d\times K$ matrix where the $i$'s th column is $\nabla_{\theta_n}\log(\rho_{\pi_{\theta_n}}(\tau_i))/(H\sqrt{K})$. Namely the Fisher information matrix is represented by a sum of $K$ rank-one matrices. For large policies represented by neural networks, $K\ll d$, and $\tilde{I}(\theta_n)$ is a low rank matrix. We can use Woodburry matrix inverse equation to inverse the fisher matrix and compute the descent direction $\delta_{\theta} = \tilde{I}(\theta)^{-1}\tilde{\nabla_{\theta}}$ in $O(K^2 d)$.
+%\wen{put this in appendix} 
 
-One can also find the descent direction $\delta_{\theta_n}$ by solving the linear system $S_nS_n^T \delta_{\theta_n} = \tilde{\nabla}_{\theta_n}$ for $\delta_{\theta_n}$ using Conjugate Gradient (CG) with a fixed number of iterations. This is equivalent to solving the above linear systems using the Partial Least Squares method. This approach is used in TRPO \cite{schulman2015trust}. The difference is that our representation of the Fisher matrix is low-rank (the sum of a small number of rank-one matrices) and in CG we never need to explicitly compute or store $S_nS_n^T$ which requires $d^2$ space and time. Instead, we only compute and store $S_n$ ($O(Kd)$) and the total computational time is still $O(K^2 d)$.
+
+%We therefore add a regularization $\lambda I_{d\times d}$ with small positive $\lambda$ to $\tilde{I}(\theta_n)$. Using the WoodBury Matrix Identity to implicitly invert $S_nS_n^T$, the final descent direction is computed as:
+%\begin{align}
+%\label{eq:natural_finite}
+%\delta_{\theta_n} = \frac{1}{\lambda}(\tilde{\nabla}_{\theta_n} - S_n(\lambda I+S_n^TS_n)^{-1}S_n^T\tilde{\nabla}_{\theta_n}).
+%\end{align} The computational complexity of $\delta\theta_n$ is $O(K^2 d)$. In other words, the computation time of $\delta\theta_n$ scales linearly with the number policy parameters. 
+
+One can also find the descent direction $\delta_{\theta_n}$ by solving the linear system $S_nS_n^T \delta_{\theta_n} = \tilde{\nabla}_{\theta_n}$ for $\delta_{\theta_n}$ using Conjugate Gradient (CG) with a fixed number of iterations, which is equivalent to solving the above linear systems using the Partial Least Square \cite{phatak2002exploiting}. This approach is used in TRPO \cite{schulman2015trust}. The difference is that our representation of the Fisher matrix is in the form of $S_nS_n^T$ and in CG we never need to explicitly compute or store $S_nS_n^T$ which requires $d^2$ space and time. Instead, we only compute and store $S_n$ ($O(Kd)$) and the total computational time is still $O(K^2 d)$. The learning-rate for natural gradient descent can be chosen as $\mu_n = \sqrt{\delta_{KL}/(\tilde{\nabla}_{\theta_n}^T\delta_{\theta_n})}$, where $\delta_{KL}>0$ intuitively controls the KL-divergence between two trajectory distributions from two successive episodes. 
 
 
 
@@ -373,7 +413,7 @@ One can also find the descent direction $\delta_{\theta_n}$ by solving the linea
 
 
 \begin{algorithm}[tb]
- \caption{Differentiable Imitation Learning (DIL)}
+ \caption{AggreVaTeD (Differentiable AggreVaTe)}
  \begin{algorithmic}[1]
  \label{alg:DIL}
  \STATE {\bfseries Input:} The given MDP and expert $\pi^e$.  Learning rate $\{\mu_n\}$. Schedule rate $\{\alpha_i\}$, $\alpha_n\to0, n\to\infty$. 
@@ -382,89 +422,97 @@ One can also find the descent direction $\delta_{\theta_n}$ by solving the linea
     \STATE Mixing policies: $\hat{\pi}_n= \alpha_n\pi^e + (1-\alpha_n)\pi_{\theta_n}$.
     \STATE \label{line:rolling_in} Starting from $\rho_0$, roll in by executing $\hat{\pi}_{n}$ on the given MDP to generate $K$ trajectories $\{\tau_i^n\}$.
     \STATE Using $\pi^e$ and $\{\tau_i^n\}_i$, compute the ascent direction $\delta_{\theta_n}$ (Eq.~\ref{eq:gradient_finite_dic}, Eq.~\ref{eq:gradient_finite_con},
-    Eq.~\ref{eq:gradient_finite_dic_vr}, Eq.~\ref{eq:gradient_finite_con_vr},Eq.~\ref{eq:natural_finite}, or CG).
+    Eq.~\ref{eq:gradient_finite_dic_vr}, Eq.~\ref{eq:gradient_finite_con_vr}, or CG).
     \label{line:gradient_compute}
-    \STATE Update: $\theta_{n+1} = \theta_n + \mu_n\delta\theta_n$.
+    \STATE Update: $\theta_{n+1} = \theta_n - \mu_n\delta_{\theta_n}$.
 \ENDFOR
  \STATE {\bfseries Return:} the best hypothesis $\hat{\pi}\in\{\pi_n\}_n$ on validation.
  \end{algorithmic}
 \end{algorithm}
 
 
-\subsection{The Differential Imitation Learning Algorithm}
-We present the Differentiable Imitation Learning (DIL) framework in Alg.~\ref{alg:DIL}. At every iteration $n$, the roll-out policy $\hat{\pi}_n$ is a mix of the expert policy $\pi^*$ and the current policy $\pi_{\theta_n}$, with mixing rate $\alpha$ ($\alpha_n\to0, n\to\infty$): at every step, with probability $\alpha$, $\hat{\pi}_n$ picks $\pi^*$ and else $\pi_{\theta_n}$. This mixing strategy with decay rate was introduced in \cite{Ross2011_AISTATS} for imitation learning, and later on was also used in sequence prediction with RNNs \cite{bengio2015scheduled}. In Line 6 %~\ref{line:gradient_compute}, 
-one can choose Eq.~\ref{eq:gradient_finite_dic} or the corresponding variance reduced estimation Eq.~\ref{eq:gradient_finite_dic_vr} (Eq.~\ref{eq:gradient_finite_dic} and Eq.~\ref{eq:gradient_finite_con_vr} for continuous actions) to perform regular gradient ascent, and choose Eq.~\ref{eq:natural_finite} or CG to perform natural gradient ascent. Compared with previous well-known imitation learning and structured prediction algorithms \cite{Ross2011_AISTATS,ross2014reinforcement,chang2015learning}, the DIL framework is extremely simple: we do not need to perform any Data Aggregation (i.e., we do not need to store all $\{\tau_i\}_i$ from all previous iterations, which significantly saves space); the computational complexity of each iteration is $O(d)$, while previous methods require solving a batch optimization over all aggregated data in each iteration. 
+\subsection{Differentiable Imitation Learning: AggreVaTeD}
+We present the differentiable imitation learning framework \emph{AggreVaTeD}, in Alg.~\ref{alg:DIL}. At every iteration $n$, the roll-in policy $\hat{\pi}_n$ is a mix of the expert policy $\pi^e$ and the current policy $\pi_{\theta_n}$, with mixing rate $\alpha$ ($\alpha_n\to0, n\to\infty$): at every step, with probability $\alpha$, $\hat{\pi}_n$ picks $\pi^e$ and else $\pi_{\theta_n}$. This mixing strategy with decay rate was first introduced in \cite{Ross2011_AISTATS} for IL, and later on was used in sequence prediction \cite{bengio2015scheduled}. In Line 6 %~\ref{line:gradient_compute}, 
+one can choose Eq.~\ref{eq:gradient_finite_dic} or the corresponding variance reduced estimation Eq.~\ref{eq:gradient_finite_dic_vr} (Eq.~\ref{eq:gradient_finite_con} and Eq.~\ref{eq:gradient_finite_con_vr} for continuous actions) to perform regular gradient descent, and choose CG to perform natural gradient descent. Compared with previous well-known IL and structured prediction algorithms \cite{Ross2011_AISTATS,ross2014reinforcement,chang2015learning}, AggreVaTeD is extremely simple: we do not need to perform any Data Aggregation (i.e., we do not need to store all $\{\tau_i\}_i$ from all previous iterations); the computational complexity of each iteration is $O(d)$. %while previous methods require solving a batch optimization over all aggregated data in each iteration. 
 
-When we use non-linear function approximators to represent the polices, the analysis of AggreVaTe  \cite{ross2014reinforcement} will no longer hold, since the loss function $\ell_n(\theta)$ is no longer convex with respect to parameters $\theta$. Nevertheless, as we will show in the next section, in practice DIL is still able to learn a policy that is competitive with, and sometimes superior to the expert's policy.  
+When we use non-linear function approximators to represent the polices, the analysis of AggreVaTe  will no longer hold, since the loss function $\ell_n(\theta)$ is no longer convex with respect to parameters $\theta$. Nevertheless, as we will show in experiments, in practice AggreVaTeD is still able to learn a policy that is competitive with, and sometimes superior to the oracle's performance.  
 
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Analysis}
 \begin{figure}
   \centering
       \includegraphics[trim={1cm 0.5cm 0 1cm},clip, width=0.22\textwidth]{./figure/binary_tree_MDP}
-  \caption{The binary tree structure MDP $\tilde{\mathcal{M}}$. Under realizable and deterministic setting (see the text in Sec.~\ref{sec:special_mdp} for details), once the algorithm explores the right-most path (bold black) and learns that $Q^e(s_0, a_l)>Q^e(s_0,a_r)$ ($a_l$ denotes go-left action), it will not have to explore the right sub-tree (dot circle).}
+  \caption{The binary tree structure MDP $\tilde{\mathcal{M}}$. %Under realizable and deterministic setting (see the text in Sec.~\ref{sec:special_mdp} for details), once the algorithm explores the right-most path (bold black) and learns that $Q^e(s_0, a_l)<Q^e(s_0,a_r)$ ($a_l$ denotes go-left action), it will not have to explore the right sub-tree (dot circle).
+  }
   \label{fig:binary_MDP}
   \vspace{-5pt}
 \end{figure}
-We analyze the performance of general imitation learning (i.e., learning with access to $Q^e$). The goal is to demonstrate teh intuition that IL learns faster than RL. To measure the speed of learning, we use the \emph{cumulative} regret of the entire learning process, defined as $R_N = \sum_{n=1}^N (\mu(\pi^e) - \mu(\pi_n))$. A smaller regret rate of $R_N$ indicates faster learning. Below we will only show this result on discrete MDPs. Throughout this section, we assume the expert $\pi^e$ is optimal. We consider finite-horizon, episodic IL and RL algorithms. 
+We analyze the performance of IL (i.e., learning with access to $Q^e$). The goal is to demonstrate that IL learns faster than RL and  by exactly how much. To measure the speed of learning, we use the \emph{cumulative} regret of the entire learning process, defined as $R_N = \sum_{n=1}^N (\mu(\pi_n) - \mu(\pi^e))$. A smaller regret rate of $R_N$ indicates faster learning. Below we focus on discrete MDPs. Throughout this section, we assume the expert $\pi^e$ is optimal. We consider finite-horizon, episodic IL and RL algorithms. 
 
 
 \subsection{A Special MDP}
 \label{sec:special_mdp}
-In Fig.~\ref{fig:binary_MDP}, we consider a $K$-depth binary tree-structured MDP $\tilde{\mathcal{M}}$ with $2^K-1$ states, and two actions ${a_l, a_r}$:  go-left and go-right. The transition is deterministic and the initial state $s_0$ is fixed. Note that there are only $2^{K-1}$ possible trajectories. The reward for each non-leaf state is zero, and the reward for each leaf is always i.i.d sampled from a given distribution (possibly different distributions for different leafs).  $S$ is the number of total states in $\tilde{\mathcal{M}}$ ($S = 2^K-1$). The following theorem shows the lower bound of $R_N$ for any finite-horizon, episodic RL algorithm on $\tilde{\mathcal{M}}$:
+Below we show that there exists a MDP where IL can be exponentially more sample efficient than RL.
+%The following theorem shows the lower bound of $R_N$ for any finite-horizon, episodic RL algorithm on $\tilde{\mathcal{M}}$:
 \begin{theorem}
 \label{them:special_lower}
-For the MDP $\tilde{\mathcal{M}}$, there exists a set of reward distributions for leaves such that  the regret $R_N$ of any finite-horizon ($H=K$), episodic RL algorithm is at least:
+There exists an MDP such that the regret $R_N$ of any finite-horizon, episodic RL algorithm is at least:
 \begin{align}
-\mathbb{E}[R_N] \geq \Omega(\sqrt{SN}),
+\mathbb{E}[R_N] \geq \Omega(\sqrt{SN}).
 \end{align} 
-\end{theorem} where the expectation is with respect to random generation of rewards and internal randomness of the algorithm. Note that $S = 2^K-1$ in $\tilde{\mathcal{M}}$.
-However, with the access to the expert's state-action value function $Q^e$, we show that there exists a policy class representation such that imitation learning can learn exponentially faster:% gives the following upper bound:
+\end{theorem} The expectation is with respect to random generation of cost and internal randomness of the algorithm. Such an MDP $\mathcal{M}$ is shown in Fig.~\ref{fig:binary_MDP} which is a depth-K binary tree-structure with $2^K-1$ states, and two actions ${a_l, a_r}$:  go-left and go-right. The transition is deterministic and the initial state $s_0$ (root) is fixed. Note that there are only $2^{K-1}$ possible trajectories. The cost for each non-leaf state is zero, and the cost for each leaf is always i.i.d sampled from a given distribution (possibly different distributions for different leafs).  $S$ is the number of total states in ${\mathcal{M}}$ ($S = 2^K-1$). However, for the same MDP $\mathcal{M}$, with the access to $Q^e$, we show that there exists a policy class such that IL can learn exponentially faster:% gives the following upper bound:
 \begin{theorem}
 \label{them:special_upper}
-For the MDP $\tilde{\mathcal{M}}$, there exists an imitation learning algorithm (AggreVaTe with FTL) that can achieve the following regret bound:
+For the MDP ${\mathcal{M}}$ (Fig.~\ref{fig:binary_MDP}), there exists an imitation learning algorithm (AggreVaTe with FTL) that can achieve the following regret bound:
 \begin{align}
 R_N \leq O(\log{S}).
 \end{align}
 \end{theorem}
-Fig.~\ref{fig:binary_MDP} illustrates the intuition behind the theorem. During the first episode, the initial policy $\pi_1$ picks the rightmost trajectory (bold black) to explore. Once the algorithm receives a reward-to-go vector $[Q^e(s_0,a_l),Q^e(s_0,a_r)]$ for $s_0$ (assume $Q^e(s_0,a_l)>Q^e(s_0,a_r)$), it immediately learns that the optimal policy will go left (black arrow) at $s_0$. Hence the algorithm eliminates the entire right sub-tree (dot circle).
+Fig.~\ref{fig:binary_MDP} illustrates the intuition behind the theorem. During the first episode, the initial policy $\pi_1$ picks the rightmost trajectory (bold black) to explore. Assume that the algorithm learns from oracle that for $s_0$ we have $Q^e(s_0,a_l)<Q^e(s_0,a_r)$, it immediately learns that the optimal policy will go left (black arrow) at $s_0$. Hence the algorithm then eliminates the entire right sub-tree (dot circle).
 
 
-Next we consider the more difficult setting where one can only query for a noisy but unbiased estimate of $Q^e$. The above halving argument will not apply since deterministically eliminating nodes based on noisy estimates of the reward-to-go might permanently remove good trajectories. However, imitation learning can still achieve the reasonable regret, even in the noisy setting:
+Next we consider the more difficult setting where one can only query for a noisy but unbiased estimate of $Q^e$. The above halving argument will not apply since deterministically eliminating nodes based on noisy estimates of the cost-to-go might permanently remove good trajectories. However, IL can still achieve the reasonable regret, even in the noisy setting:
 \begin{theorem}
 \label{them:special_lower_noisy}
-With only access to unbiased estimate of $Q^e$, for the MDP $\tilde{\mathcal{M}}$, there exists an imitation learning algorithm (AggreVaTe with EG) that can achieve the following regret with probability at least $1-\delta$:
+With only access to unbiased estimate of $Q^e$, for the MDP ${\mathcal{M}}$, there exists an imitation learning algorithm (AggreVaTeD with EG) that can achieve the following regret with probability at least $1-\delta$:
 \begin{align}
 R_N \leq O\Big(\ln(S)(\sqrt{\ln(S)N}+\sqrt{\ln(2/\delta)N})\Big)
 \end{align}
 \end{theorem} In other words, imitation learning can still achieve a regret bound that is \emph{polylog} on the number of total states. The detailed proofs of the above three theorems can be found in Appendix~\ref{sec:special_lower},\ref{sec:special_upper},\ref{sec:proof_special_noisy} respectively. %The above results shows that for $\tilde{\mathcal{M}}$, imitation learning 
 %To prove the lower bound shown in Theorem~\ref{them:special_lower}, we show that any Multi-Arm Bandits (MAB) problem can be reduced to $\tilde{\mathcal{M}}$ and it is well known that for stochastic MAB the lower bound of regret is $\Omega(KT)$, where $K$ is the number of arms 
-In summary, for MDP $\tilde{\mathcal{M}}$, imitation learning is exponentially faster than RL. 
+In summary, for MDP ${\mathcal{M}}$, imitation learning is exponentially faster than RL. 
 
 \subsection{General MDPs}
-We next consider general discrete finite MDPs in the difficult case where we can only access an unbiased estimate of $Q^e_t$, for any $t$ and state-action pair. The policy $\pi$ is represented as a set of probability vectors $\pi^{s,t}\in\Delta(A)$, for all $s \in\mathcal{S}$ and  $t\in[H]$: $\pi = \{\pi^{s,t}\}_{s\in\mathcal{S},t\in[H]}$. 
+We next show that for general discrete finite MDP, AggreVaTeD learns faster than RL and is near-optimal.
+Again we consider the case where we can only access an unbiased estimate of $Q^e_t$, for any $t$ and state-action pair. The policy $\pi$ is represented as a set of probability vectors $\pi^{s,t}\in\Delta(A)$, for all $s \in\mathcal{S}$ and  $t\in[H]$: $\pi = \{\pi^{s,t}\}_{s\in\mathcal{S},t\in[H]}$. %We show that for discrete MDP, AggreVaTeD learns faster than RL and is near-optimal. 
 
 %Namely it is possible that the policy, including $\pi^e$, at different state $s$ and different time step $t$ may has completely different action selection strategies.  
 
 \begin{theorem}
 \label{them:upper_bound}
-With access to unbiased estimates of $Q^e_t$, AggreVaTe with EG achieves the regret upper bound:
+With access to unbiased estimates of $Q^e_t$, AggreVaTeD with EG achieves the regret upper bound:
 \begin{align}
 \label{eq:regret_eg}
 R_N \leq O\big(HQ_{\max}^e\sqrt{S\ln(A)N}\big).
 \end{align}
-\end{theorem}
-The advantage of using EG over OGD in dicrete MDPs comes from the almost dimension-free property of EG: $R_N$ only depends on $\sqrt{\ln(A)}$ instead of $\sqrt{A}$ which will appear in $R_N$ if one simply runs OGD on the sequence of losses $\ell_n(\pi)$. The total regret shown in Eq.~\ref{eq:regret_eg} allows us to compare IL algorithms to RL algorithms on discrete MDPs. For example, the Upper Confidence Bound (UCB) based, near-optimal optimistic RL algorithms from \cite{jaksch2010near}, specifically designed for efficient exploration, admit regret $\tilde{O}(HS\sqrt{H AN})$, leading to a gap of approximately $\sqrt{HAS}$ compared to the regret bound of imitation learning shown in Eq.~\ref{eq:regret_eg}. We also provide a lower bound on $R_N$ for $H=1$ case which shows the dependencies on $N, A, S$ are tight:
+\end{theorem} Here $Q_{\max}^e$ is the maximum cost-to-go of the expert\footnote{Here we assume $Q_{\max}^e$ is a constant compared to $H$. If $Q_{\max}^e=\Theta(H)$, then the expert is no better than a random policy of which the cost-to-go is around $\Theta(H)$.}. 
+%The advantage of using EG over OGD in discrete MDPs comes from the almost dimension-free property of EG: $R_N$ only depends on $\sqrt{\ln(A)}$ instead of $\sqrt{A}$ which will appear in $R_N$ if one simply runs OGD on the sequence of losses $\ell_n(\pi)$. 
+The total regret shown in Eq.~\ref{eq:regret_eg} allows us to compare IL algorithms to RL algorithms on discrete MDPs. For example, the Upper Confidence Bound (UCB) based, near-optimal optimistic RL algorithms from \cite{jaksch2010near}, specifically designed for efficient exploration, admit regret $\tilde{O}(HS\sqrt{H AN})$, leading to a gap of approximately $\sqrt{HAS}$ compared to the regret bound of imitation learning shown in Eq.~\ref{eq:regret_eg}. 
+
+We also provide a lower bound on $R_N$ for $H=1$ case which shows the dependencies on $N, A, S$ are tight:
 \begin{theorem}
 \label{them:lower_bound}
-There exists MDP with $H = 1$, with only access to unbiased estimate of $Q^e$, any finite-horizon episodic imitation learning algorithm  must have:
+There exists an MDP (H=1), with only access to unbiased estimate of $Q^e$, any finite-horizon episodic imitation learning algorithm  must have:
 \begin{align}
 \mathbb{E}[R_N] \geq \Omega(\sqrt{S\ln({A})N}).
 \end{align}
-\end{theorem} The proofs of the above two theorems regarding general MDPs can be found at Appendix~\ref{sec:proof_upper_bound},\ref{sec:proof_lower_bound}
-
-
-
-
+\end{theorem} The proofs of the above two theorems regarding general MDPs can be found at Appendix~\ref{sec:proof_upper_bound},\ref{sec:proof_lower_bound}. In summary in discrete MDPs, IL is faster than RL and AggreVaTeD is a near-optimal IL algorithm.
 
 
 \section{Experiments}
@@ -501,11 +549,11 @@ There exists MDP with $H = 1$, with only access to unbiased estimate of $Q^e$, a
     \caption{Performance ($R_n$ on y-axis) versus number of iterations ($n$ on x-axis) of DIL (blue and green), experts (red), and RL algorithms (dotted) on different robotics simulators. }
     \label{fig:perf_robotics}
 \end{figure*}
-We evaluate our algorithms on robotics simulations from OpenAI Gym \cite{brockman2016openai} and on Handwritten Algebra Dependency Parsing \cite{duyckpredicting}. Since our approach, in theory, promises that there exists a policy among all of the learned polices that can perform as well as the expert, we report the performance of the best policy so far: $R_i = \max\{\mu(\pi_1), ..., \mu(\pi_i)\}$. For both IL and RL, for regular gradient ascent, we use ADAM \cite{kingma2014adam} which itself is a first-order no-regret online algorithm, and for natural gradient ascent, we use Conjugate Gradient with fixed number of iterations (aka Truncated Natural Gradient \cite{duan2016benchmarking}) to compute the ascent direction. 
+We evaluate our algorithms on robotics simulations from OpenAI Gym \cite{brockman2016openai} and on Handwritten Algebra Dependency Parsing \cite{duyckpredicting}. Throughout the experiments, we report reward instead of cost, since OpenAI Gym in default uses reward and dependency parsing aims to maximize UAS score.  Since our approach, in theory, promises that there exists a policy among all of the learned polices that can perform as well as the expert, we report the performance of the best policy so far: $R_i = \max\{\mu(\pi_1), ..., \mu(\pi_i)\}$. For both IL and RL, for regular gradient ascent, we use ADAM \cite{kingma2014adam} which itself is a first-order no-regret online algorithm, and for natural gradient ascent, we use Conjugate Gradient with fixed number of iterations (Partial Least Squares) to compute the descent direction. 
 
 
 \subsection{Robotics Simulations}
-For the discrete action setting we consider the CartPole balancing task and Acrobot Swing-up task. For the continuous action setting we consider the Hopper and the Walker. For the purpose of generating an expert, similar to previous work \cite{ho2016generative}, we implemented a Deep Q-Network (DQN) to generate $Q^e$ for the CartPole and the Acrobot (e.g., to simulate the settings where $Q^e$ is available), while using the public available TRPO implementation to generate $\pi^e$ for continuous tasks to simulate the settings where one needs to estimate $Q^e$ by Monte-Carlo roll outs $\pi^e$. %In order to demonstrate DIL's ability to outperform experts, we did not run DQN or TRPO for large amount of time nor tune the parameters extremely hard to get $\pi^e$ or $Q^e$. 
+For the discrete action setting we consider the CartPole balancing task and Acrobot Swing-up task. For the continuous action setting we consider the Hopper and the Walker. For the purpose of generating an expert, similar to previous work \cite{ho2016generative}, we used a Deep Q-Network (DQN) to generate $Q^e$ for the CartPole and the Acrobot (e.g., to simulate the settings where $Q^e$ is available), while using the public available TRPO implementation to generate $\pi^e$ for continuous tasks to simulate the settings where one needs to estimate $Q^e$ by Monte-Carlo roll outs $\pi^e$. %In order to demonstrate DIL's ability to outperform experts, we did not run DQN or TRPO for large amount of time nor tune the parameters extremely hard to get $\pi^e$ or $Q^e$. 
 
 
 
@@ -513,15 +561,15 @@ For the discrete action setting we consider the CartPole balancing task and Acro
 
 
 
-Fig.~\ref{fig:cartpole} and \ref{fig:acrobot} shows the performance averaged over 10 random trials of DIL with regular gradient ascent and natural gradient ascent. Note that DIL outperforms the experts' performance significantly: Natural gradient surpass experts 5.8$\%$ in Acrobot and $\mathbf{25\%}$ in Cart-pole. Also, for Acrobot swing-up, at horizon $H=300$, with high probability a random neural network policy won't be able to collect any reward signals. Hence the improvement rate of REINFORCE and Truncated Natural Gradient is slow. In fact, we observed that for a short horizon such as $H=300$, REINFORCE and Truncated Natural Gradient often even fail to improve the policy at all (failed 6 times among 10 trials). On the contrary, DIL will not suffer from the delayed reward signal issue, since the expert will collect reward signals much faster than a random policy. 
+Fig.~\ref{fig:cartpole} and \ref{fig:acrobot} shows the performance averaged over 10 random trials of AggreVaTeD with regular gradient descent and natural gradient descent. Note that AggreVaTeD outperforms the experts' performance significantly: Natural gradient surpass experts 5.8$\%$ in Acrobot and $\mathbf{25\%}$ in Cart-pole. Also, for Acrobot swing-up, at horizon $H=200$, with high probability a random neural network policy won't be able to collect any reward signals. Hence the improvement rate of REINFORCE and Truncated Natural Gradient is slow. In fact, we observed that for a short horizon such as $H=200$, REINFORCE and Truncated Natural Gradient often even fail to improve the policy at all (failed 6 times among 10 trials). On the contrary, AggreVaTeD will not suffer from the delayed reward signal issue, since the expert will collect reward signals much faster than a random policy. 
 
-In Acrobot partially-observable setting (observations are the positions of the links), Fig.~\ref{fig:acrobot_partial} shows the performance of DIL with an LSTM policy (32 hidden states) where the expert has access to full states but the learner can only access to observations. We make the problem harder by setting $H=200$. RL algorithms did not achieve any improvement while DIL still achieves 92$\%$ of expert's performance.
+In Acrobot partially-observable setting (observations are the positions of the links), Fig.~\ref{fig:acrobot_partial} shows the performance of AggreVaTeD with an LSTM policy (32 hidden states) where the expert has access to full states but the learner can only access to observations. RL algorithms did not achieve any improvement while DIL still achieves 92$\%$ of expert's performance.
 
 \paragraph{Continuous Action Setting}
-We test our approaches on two robotics simulators with continuous actions: (1) the 2-d Walker and (2) the Hopper from the MuJoCo physics simulator. Following the neural network settings described in \citet{schulman2015trust}, the expert policy $\pi^e$ is obtained from TRPO with one hidden layer (64 hidden states), which is the same structure that we use to represent our policies $\pi_{\theta}$. We set $K = 50$ and $H = 100$. We initialize $\pi_{\theta_1}$ by collecting $K$ expert demonstrations and then maximize the likelihood of these demonstrations. We use Eq.~\ref{eq:gradient_finite_con} instead of the variance reduced equation here since we need to use MC roll-outs to estimate $V^e$ (we simply use one roll-out to estimate $Q^e$). %which will introduce more variance.
+We test our approaches on two robotics simulators with continuous actions: (1) the 2-d Walker and (2) the Hopper from the MuJoCo physics simulator. Following the neural network settings described in \citet{schulman2015trust}, the expert policy $\pi^e$ is obtained from TRPO with one hidden layer (64 hidden states), which is the same structure that we use to represent our policies $\pi_{\theta}$. We set $K = 50$ and $H = 100$. We initialize $\pi_{\theta_1}$ by collecting $K$ expert demonstrations and then maximize the likelihood of these demonstrations (i.e., supervised learning). We use Eq.~\ref{eq:gradient_finite_con} instead of the variance reduced equation here since we need to use MC roll-outs to estimate $V^e$ (we simply use one roll-out to estimate $Q^e$). %which will introduce more variance.
 
 
-Fig.~\ref{fig:walker} and \ref{fig:hopper} show the performance averaged over 5 random trials. Note that DIL significantly outperforms the expert in the Walker problem while achieving 97$\%$ of the expert's performance in the Hopper problem. After 100 iterations, we see that by leveraging the help from experts, DIL can achieve much faster improvement rate than the corresponding RL algorithms. 
+Fig.~\ref{fig:walker} and \ref{fig:hopper} show the performance averaged over 5 random trials. Note that DIL significantly outperforms the expert in the Walker problem while achieving 97$\%$ of the expert's performance in the Hopper problem. After 100 iterations, we see that by leveraging the help from experts, AggreVaTeD can achieve much faster improvement rate than the corresponding RL algorithms. 
 
 
 \subsection{Dependency Parsing on Handwritten Algebra}
@@ -545,15 +593,15 @@ Fig.~\ref{fig:walker} and \ref{fig:hopper} show the performance averaged over 5 
     \end{tabular}}
 \end{center}
 \vspace{-5pt}
-\caption{Performance (Unlabeled Attachment Score) of different approaches on handwritten algebra dependency parsing. \emph{SL} stands for supervised learning using expert's samples: maximizing the likelihood of expert's actions under the sequences generated by expert itself. \emph{SL-RL} means RL with initialization using SL. \emph{Random} stands for the initial performances of random policies (LSTMs and NN).
+\caption{\arun{CHANGE DIL TO AggreVateD} Performance (Unlabeled Attachment Score) of different approaches on handwritten algebra dependency parsing. \emph{SL} stands for supervised learning using expert's samples: maximizing the likelihood of expert's actions under the sequences generated by expert itself. \emph{SL-RL} means RL with initialization using SL. \emph{Random} stands for the initial performances of random policies (LSTMs and NN).
 The performance of DAgger with Kernel SVM is from \cite{duyckpredicting}.} %and Forward Training and SMILe \cite{ross2010efficient} performed worse than DAgger.}
 \label{tab:eager}
 \end{table*}
 
-We consider a structured prediction problem: transition-based dependency parsing for handwritten algebra with raw-pixel image data \cite{duyckpredicting}. The parsing task for algebra is similar to the classic dependency parsing for natural language \cite{chang2015learning_dependency} where the problem is modelled as imitation learning setting and the state-of-the-art result is achieved by AggreVaTe using Data Aggregation (FTL or FTRL). The additional challenge here is that the inputs are handwritten algebra symbols in raw-pixel images. Following suggestions from \cite{duyckpredicting}, we directly learn to predict dependency trees from low level image features (Histogram of Gradient features (HoG)). The expert is constructed using the ground-truth dependencies in the training data\footnote{In configurations which have multiple optimal transitions, our implementation of expert picks the first action deterministically in the order of Shift, Right, Left, Reduce.}. The full state $s$ during parsing consists of three data structures: stack, buffer and arcs, which all store raw images of the algebraic symbols. Since the sizes of stack, buffer and arcs are changing during parsing, common approach to featurize the state $s$ is to take the features of the latest three symbols from stack, buffer and arcs (e.g., \cite{chang2015learning_dependency}). Hence the problem falls into the \emph{partially observable} setting, where the feature $o$ is extracted from state $s$ and only contains partial information about $s$. %Hence this problem can be considered as imitation learning in partial observable setting.
-The dataset consists of 400 sets of handwritten algebra equations. We use 80$\%$ for training, 10$\%$ for validation, and 10$\%$ for testing. We include an example of handwritten algebra equations and its dependency tree in Appendix~\ref{sec:parsing_example}. Note that different from robotics simulators where every episode one can get freshly new data from simulators, here the size of dataset is fixed and the sample efficiency is even more critical. 
+We consider a structured prediction problem: transition-based dependency parsing for handwritten algebra with raw-pixel image data \cite{duyckpredicting}. The parsing task for algebra is similar to the classic dependency parsing for natural language \cite{chang2015learning_dependency} where the problem is modelled in IL setting and the state-of-the-art  is achieved by AggreVaTe with FTRL (using Data Aggregation). The additional challenge here is that the inputs are handwritten algebra symbols in raw-pixel images. Following suggestions from \cite{duyckpredicting}, we directly learn to predict dependency trees from low level image features (Histogram of Gradient features (HoG)). The expert is constructed using the ground-truth dependencies in the training data\footnote{In configurations which have multiple optimal transitions, our implementation of expert picks the first action deterministically in the order of Shift, Right, Left, Reduce.}. The full state $s$ during parsing consists of three data structures: Stack, Buffer and Arcs, which all store raw images of the algebraic symbols. Since the sizes of stack, buffer and arcs are changing during parsing, common approach to featurize the state $s$ is to take the features of the latest three symbols from stack, buffer and arcs (e.g., \cite{chang2015learning_dependency}). Hence the problem falls into the \emph{partially observable} setting, where the feature $o$ is extracted from state $s$ and only contains partial information about $s$. %Hence this problem can be considered as imitation learning in partial observable setting.
+The dataset consists of 400 sets of handwritten algebra equations. We use 80$\%$ for training, 10$\%$ for validation, and 10$\%$ for testing. We include an example of handwritten algebra equations and its dependency tree in Appendix~\ref{sec:parsing_example}. Note that different from robotics simulators where every episode one can get freshly new data from simulators, here the size of dataset is fixed and sample efficiency is even more critical. 
 
-The recurrent neural network policy that we used follows the design from \cite{sutskever2014sequence}: the RNN policy consists of two LSTMs: given a sequence  of algebra symbols $\tau$, the first LSTM goes through $\tau$ one symbol at a time and at the end of the sequence outputs its hidden states and memory (i.e., as a summary of $\tau$).The second LSTM then initializes its own hidden states and memory using the outputs of the first LSTM. At every parsing step $t$, the second LSTM takes the current partial observation $o_t$ ($o_t$ consists of features of the most recent item from stack, buffer and arcs) and action $a_t$ as inputs, and uses its internal hidden state and memory to compute the policy $\pi(\cdot|o_1,...,o_t,\tau)$ conditioned on the whole history. We also tested reactive policies which are represented by fully connected ReLu neural networks (NN) (one-layer with 1000 hidden states) that directly maps from observation $o$ to action $a$, where $o_t$ uses the most three recent items from stack, buffer and arcs. We use variance reduced gradient estimations, which give better performance. The performance is summarised in Table~\ref{tab:eager}. Due to the partial observability property of the problem setting, DIL with LSTM policy achieves significantly better UAS scores compared to NN based policy and DAgger with Kernel SVM \cite{duyckpredicting}. Also DIL with LSTM policy achieves 97$\%$ of optimal expert's performance. Fig.~\ref{fig:perf_eager} shows the improvement rate of regular gradient ascent and natural gradient ascent on both validation set and test set. Overall we observe that both methods have similar performance. Natural gradient ascent achieves better UAS score in validation set and converges slightly faster on test set but achieves lower UAS score in test set. 
+The recurrent neural network policy that we used follows the design from \cite{sutskever2014sequence}: the RNN policy consists of two LSTMs: given a sequence of algebra symbols $\tau$, the first LSTM goes through $\tau$ one symbol at a time and at the end of the sequence outputs its hidden states and memory (i.e., as a summary of $\tau$).The second LSTM then initializes its own hidden states and memory using the outputs of the first LSTM. At every parsing step $t$, the second LSTM takes the current partial observation $o_t$ ($o_t$ consists of features of the most recent item from stack, buffer and arcs) as input, and uses its internal hidden state and memory to compute the policy $\pi(\cdot|o_1,...,o_t,\tau)$ conditioned on the whole history. We also tested reactive policies which are represented by fully connected ReLu neural networks (NN) (one-layer with 1000 hidden states) that directly maps from observation $o_t$ to action $a$, where $o_t$ uses the most three recent items. We use variance reduced gradient estimations, which give better performance. The performance is summarised in Table~\ref{tab:eager}. Due to the partial observability property of the problem, AggreVaTeD with LSTM policy achieves significantly better UAS scores compared to NN based reactive policy and DAgger with Kernel SVM \cite{duyckpredicting}. Also DIL with LSTM policy achieves 97$\%$ of optimal expert's performance. Fig.~\ref{fig:perf_eager} shows the improvement rate of regular gradient and natural gradient on both validation set and test set. Overall we observe that both methods have similar performance. Natural gradient achieves better UAS score in validation and converges slightly faster on test set but achieves lower UAS score in test set. 
 
 
 %\begin{table}[t]
@@ -634,22 +682,22 @@ We present a framework that shows how policy gradient methods can be used for im
 \label{sec:EG_derivation}
 We show the detailed derivation of Eq.~\ref{eq:eg_closed_form} for AggreVaTe with EG in discrete MDP. Recall that with $KL$-divergence as the penalization, one update the policy in each episode as:
 \begin{align}
-\{\pi_{n+1}^s\}_{s\in\mathcal{S}} &= \arg\max_{\{\pi^s\in \Delta(A),\forall s\}}\frac{1}{H}\sum_{t=1}^H\sum_{s\in\mathcal{S}}d_t^{\pi_n}(s)\big( \pi^s\cdot Q_t^e(s)\big) - \sum_{s\sim\mathcal{S}}\frac{\bar{d}^{\pi_n}(s)}{\mu_{n,s}}KL(\pi_s \| \pi_n^s) \nonumber
+\{\pi_{n+1}^s\}_{s\in\mathcal{S}} &= \arg\min_{\{\pi^s\in \Delta(A),\forall s\}}\frac{1}{H}\sum_{t=1}^H\sum_{s\in\mathcal{S}}d_t^{\pi_n}(s)\big( \pi^s\cdot Q_t^e(s)\big) + \sum_{s\sim\mathcal{S}}\frac{\bar{d}^{\pi_n}(s)}{\mu_{n,s}}KL(\pi_s \| \pi_n^s) \nonumber
 \end{align} Note that in the above equation, for a particular state $s$, optimizing $\pi^s$ is in fact independent of $\pi^{s'}, \forall s'\neq s$. Hence the optimal sequence $\{\pi^s\}_{s\in\mathcal{S}}$ can be achieved by optimizing $\pi^s$ independently for each $s\in\mathcal{S}$. For $\pi^s$, we have the following update rule:
 \begin{align}
-\pi_{n+1}^s = &\arg\max_{\pi^s\in\Delta(A)}\frac{1}{H}\sum_{t=1}^H d_t^{\pi_n}(s)(\pi^s\cdot Q^e_t(s)) - \frac{\bar{d}^{\pi_n}(s)}{\mu_{n,s}}KL(\pi_s\| \pi_n^s) \nonumber\\
-& = \arg\max_{\pi^s\in\Delta(A)}\pi^{s}\cdot (\sum_{t=1}^H d_t^{\pi_n}(s)Q_t^e(s) / H) - \frac{\bar{d}^{\pi_n}(s)}{\mu_{n,s}}KL(\pi_s\|\pi_n^s) \nonumber\\
-& = \arg\max_{\pi^s\in\Delta(A)}\pi^{s}\cdot (\sum_{t=1}^H d_t^{\pi_n}(s)Q_t^e(s) /(H\bar{d}^{\pi_n}(s))) - \frac{1}{\mu_{n,s}}KL(\pi_s\|\pi_n^s) \nonumber\\
-& = \arg\max_{\pi^s\in\Delta(A)}\pi^s\cdot \tilde{Q}^e(s) - \frac{1}{\mu_{n,s}}\sum_{j=1}^A \pi^s[j](\log(\pi^s[j]) - \log(\pi_n^s[j]))
+\pi_{n+1}^s = &\arg\min_{\pi^s\in\Delta(A)}\frac{1}{H}\sum_{t=1}^H d_t^{\pi_n}(s)(\pi^s\cdot Q^e_t(s)) + \frac{\bar{d}^{\pi_n}(s)}{\mu_{n,s}}KL(\pi_s\| \pi_n^s) \nonumber\\
+& = \arg\min_{\pi^s\in\Delta(A)}\pi^{s}\cdot (\sum_{t=1}^H d_t^{\pi_n}(s)Q_t^e(s) / H) + \frac{\bar{d}^{\pi_n}(s)}{\mu_{n,s}}KL(\pi_s\|\pi_n^s) \nonumber\\
+& = \arg\min_{\pi^s\in\Delta(A)}\pi^{s}\cdot (\sum_{t=1}^H d_t^{\pi_n}(s)Q_t^e(s) /(H\bar{d}^{\pi_n}(s))) + \frac{1}{\mu_{n,s}}KL(\pi_s\|\pi_n^s) \nonumber\\
+& = \arg\min_{\pi^s\in\Delta(A)}\pi^s\cdot \tilde{Q}^e(s) + \frac{1}{\mu_{n,s}}\sum_{j=1}^A \pi^s[j](\log(\pi^s[j]) - \log(\pi_n^s[j]))
 \end{align} Take the derivative with respect to $\pi^s[j]$, and set  it to zero, we get:
 \begin{align}
-\tilde{Q}^e(s)[j] -\frac{1}{\mu_{n,s}}(\log(\pi^s[j]/\pi_n^s[j]) + 1) = 0,
+\tilde{Q}^e(s)[j] +\frac{1}{\mu_{n,s}}(\log(\pi^s[j]/\pi_n^s[j]) + 1) = 0,
 \end{align} this gives us:
 \begin{align}
-\pi^s[j] = \pi_n^s[j]\exp(\mu_{n,s}\tilde{Q}^e(s)[j]-1).
+\pi^s[j] = \pi_n^s[j]\exp(-\mu_{n,s}\tilde{Q}^e(s)[j]-1).
 \end{align} Since $\pi^s\in\Delta(A)$, after normalization, we get:
 \begin{align}
-\pi^s[j] = \frac{\pi_n^s[j]\exp(\mu_{n,s}\tilde{Q}^e(s)[j])}{\sum_{i=1}^A \pi_n^s[i]\exp(\mu_{n,s}\tilde{Q}^e(s)[i])}
+\pi^s[j] = \frac{\pi_n^s[j]\exp(-\mu_{n,s}\tilde{Q}^e(s)[j])}{\sum_{i=1}^A \pi_n^s[i]\exp(-\mu_{n,s}\tilde{Q}^e(s)[i])}
 \end{align}
 
 
@@ -669,7 +717,7 @@ The second known result we will use is the analysis of Weighted Majority Algorit
 \label{lemma:EG}
 The sequence of decisions $\{w_n\}$ computed by running Exponential Gradient Ascent with step size $\mu$ on the loss functions $\{w\cdot y_n\}$ has the following regret bound:
 \begin{align}
-\max_{w^*\in\Delta(d)} \sum_{n=1}^N (w^*\cdot y_n - w_n\cdot y_n) \leq \frac{\ln(d)}{\mu} + \frac{\mu}{2}\sum_{n=1}^N\sum_{i=1}^d w_n[i] y_n[i]^2.
+\sum_{n=1}^N w_n\cdot y_n - \min_{w^*\in\Delta(d)} \sum_{n=1}^N w^*\cdot y_n \leq \frac{\ln(d)}{\mu} + \frac{\mu}{2}\sum_{n=1}^N\sum_{i=1}^d w_n[i] y_n[i]^2.
 \end{align}
 \end{lemma} We refer readers to \cite{shalev2012online} for detailed proof.
 
@@ -677,75 +725,75 @@ The sequence of decisions $\{w_n\}$ computed by running Exponential Gradient Asc
 \section{Proof of Theorem~\ref{them:special_lower}}
 \label{sec:special_lower}
 \begin{proof}
-We construct a reduction from stochastic Multi-Arm Bandits (MAB) to the MDP $\tilde{\mathcal{M}}$. A stochastic MAB is defined by $S$ arms denoted as $I^1, ..., I^S$. Each arm $I^t$'s reward $r_{i}$ at any time step $t$ is sampled from a fixed but unknown distribution. A bandit algorithm picks an arm $I_t$ at  iteration $t$ and then receives an unbiased sample of the picked arm's reward $r_{I_t}$. For any bandit algorithm that picks arms $I_1, I_2,...,I_N$ in $N$ rounds, the expected regret is defined as:
+We construct a reduction from stochastic Multi-Arm Bandits (MAB) to the MDP $\tilde{\mathcal{M}}$. A stochastic MAB is defined by $S$ arms denoted as $I^1, ..., I^S$. Each arm $I^t$'s cost $c_{i}$ at any time step $t$ is sampled from a fixed but unknown distribution. A bandit algorithm picks an arm $I_t$ at  iteration $t$ and then receives an unbiased sample of the picked arm's cost $c_{I_t}$. For any bandit algorithm that picks arms $I_1, I_2,...,I_N$ in $N$ rounds, the expected regret is defined as:
 \begin{align}
-\mathbb{E}[R_N] = \max_{i\in [S]}\sum_{n=1}^N \bar{r}_{i} - \mathbb{E}[  \sum_{n=1}^N r_{I_n}],
-\end{align} where the expectation is taken with respect to the randomness of the reward sampling process and possibly the randomness of the bandit algorithm. It has been shown that there exists a set of Bernoulli distributions from which the arms' rewards sampled from, the expected regret $\mathbb{E}[R_N]$ is at least $\Omega(\sqrt{S N})$. 
+\mathbb{E}[R_N] = \mathbb{E}[  \sum_{n=1}^N c_{I_n}] - \min_{i\in[S]}\sum_{n=1}^N \bar{c}_{i},
+\end{align} where the expectation is taken with respect to the randomness of the reward sampling process and possibly the randomness of the bandit algorithm. It has been shown that there exists a set of distributions  from which the arms' costs sampled from, the expected regret $\mathbb{E}[R_N]$ is at least $\Omega(\sqrt{S N})$ \cite{bubeck2012regret}. 
 
-Consider a MAB with $2^{K}$ arms. To construct a MDP from a MAP, we construct a $K+1$-depth binary-tree structure MDP with $2^{K+1}-1$ nodes. We set each node in the binary tree as a state in the MDP. The number of actions of the MDP is two, which corresponds to go left or right at a node in the binary tree. We associate each leaf nodes with arms in the original MAB: the reward of the $i$'th leaf node is sampled from the reward distribution for the $i$'th arm, while the non-leaf nodes have reward always equal to zero. The initial distribution $\rho_0$ concentrates on the root of the binary tree. Note that there are total $2^K$ trajectories from the root to leafs, and we denote them as $\tau_1,...\tau_{2^K}$. We consider finite horizon ($H=K+1$) episodic RL algorithms that outputs $\pi_1,\pi_2,...,\pi_N$ at $N$ episodes, where $\pi_n$ is any deterministic policy that maps a node to actions \emph{left} or \emph{right}. Any RL algorithm must have the following regret lower bound:
+Consider a MAB with $2^{K}$ arms. To construct a MDP from a MAP, we construct a $K+1$-depth binary-tree structure MDP with $2^{K+1}-1$ nodes. We set each node in the binary tree as a state in the MDP. The number of actions of the MDP is two, which corresponds to go left or right at a node in the binary tree. We associate each leaf nodes with arms in the original MAB: the cost of the $i$'th leaf node is sampled from the cost distribution for the $i$'th arm, while the non-leaf nodes have cost always equal to zero. The initial distribution $\rho_0$ concentrates on the root of the binary tree. Note that there are total $2^K$ trajectories from the root to leafs, and we denote them as $\tau_1,...\tau_{2^K}$. We consider finite horizon ($H=K+1$) episodic RL algorithms that outputs $\pi_1,\pi_2,...,\pi_N$ at $N$ episodes, where $\pi_n$ is any deterministic policy that maps a node to actions \emph{left} or \emph{right}. Any RL algorithm must have the following regret lower bound:
 \begin{align}
 \label{eq:bandit_to_RL}
-\max_{\pi^*}\sum_{n=1}^N \mu(\pi^*) - \mathbb{E}[\sum_{n=1}^N \mu(\pi_n)] \geq \Omega(\sqrt{SN}),
-\end{align} where the expectation is taken with respect to the possible randomness of the RL algorithms. Note that any deterministic policy $\pi$ identifies a trajectory in the binary tree when rolling in from the root. The optimal policy $\pi^*$ simply corresponds to the trajectory that leads to the leaf with the maximum expected reward. Note that each trajectory is associated with an arm from the original MAB, and the expected total reward of a trajectory corresponds to the expected reward of the associated arm. Hence if there exists an RL algorithm that achieves regret less than $O(\sqrt{SN})$, then we can solve the original MAB problem by simply running the RL algorithm on the constructed MDP. Since the lower bound for MAB is $\Omega(\sqrt{SN})$, this concludes that Eq.~\ref{eq:bandit_to_RL} holds. 
+\mathbb{E}[\sum_{n=1}^N \mu(\pi_n)] - \min_{\pi^*}\sum_{n=1}^N \mu(\pi^*) \geq \Omega(\sqrt{SN}),
+\end{align} where the expectation is taken with respect to the possible randomness of the RL algorithms. Note that any deterministic policy $\pi$ identifies a trajectory in the binary tree when rolling in from the root. The optimal policy $\pi^*$ simply corresponds to the trajectory that leads to the leaf with the mininum expected cost. Note that each trajectory is associated with an arm from the original MAB, and the expected total cost of a trajectory corresponds to the expected cost of the associated arm. Hence if there exists an RL algorithm that achieves regret $O(\sqrt{SN})$, then we can solve the original MAB problem by simply running the RL algorithm on the constructed MDP. Since the lower bound for MAB is $\Omega(\sqrt{SN})$, this concludes that Eq.~\ref{eq:bandit_to_RL} holds. 
 \end{proof}
 
 \section{Proof of Theorem~\ref{them:special_upper}}
 \label{sec:special_upper}
 \begin{proof}
-For notation simplicity we denote $a_l$ as the go-left action while $a_r$ is the go-right action. Without loss of generality, we assume that the leftmost trajectory has the highest total reward (e.g., $s_3$ in Fig.~\ref{fig:binary_MDP} has the highest average reward).
+For notation simplicity we denote $a_l$ as the go-left action while $a_r$ is the go-right action. Without loss of generality, we assume that the leftmost trajectory has the lowest total cost (e.g., $s_3$ in Fig.~\ref{fig:binary_MDP} has the lowest average cost).
 We consider the deterministic policy class $\Pi$ that contains all policy $\pi: \mathcal{S}\to \{a_l,a_r\}$. Since there are $S$ states and 2 actions, the total number of policies in the policy class is $2^S$. To prove the upper bound $R_N\leq O(\log(S))$, we claim that for any $e\leq K$, at the end of episode $e$, AggreVaTe with FTL identifies the $e$'th state on the best trajectory, i,e, the leftmost trajectory $s_0, s_1, s_3, ..., s_{(2^{K-1}-1)}$. We can prove the claim by induction. 
 
 At episode $e=1$, based on the initial policy, AggreVaTe picks a trajectory $\tau_1$ to explore. %Denote the trajectory as $s_0, s^{1,1}, ..., s^{1,k}$, where $s^{e,t}$ represents the state that is visited at episode $e$, at time step $t$. 
-AggreVaTe with FTL collects the states $s$ at $\tau_1$ and their associated reward-to-go vectors $[Q^e(s,a_l), Q^e(s,a_r)]$. Let us denote $D_1$ as the dataset that contains the state,reward-to-go pairs: $D_1 = \{(s, [Q^e(s,a_l),Q^e(s,a_l)])\}$, for $s\in \tau_1$. Since $s_0$ is visited, the state-cost pair $(s_0, [Q^e(s_0,a_l),Q^e(s_0,a_r)])$ must be in $D_1$. To update policy from $\pi_1$ to $\pi_2$, AggreVaTe with FTL runs cost-sensitive classification $D_1$ as:
+AggreVaTe with FTL collects the states $s$ at $\tau_1$ and their associated cost-to-go vectors $[Q^e(s,a_l), Q^e(s,a_r)]$. Let us denote $D_1$ as the dataset that contains the state,cost-to-go pairs: $D_1 = \{(s, [Q^e(s,a_l),Q^e(s,a_l)])\}$, for $s\in \tau_1$. Since $s_0$ is visited, the state-cost pair $(s_0, [Q^e(s_0,a_l),Q^e(s_0,a_r)])$ must be in $D_1$. To update policy from $\pi_1$ to $\pi_2$, AggreVaTe with FTL runs cost-sensitive classification $D_1$ as:
 \begin{align}
 \label{eq:cs}
-\pi_2 = \arg\max_{\pi}\sum_{k=1}^{|D_1|} Q^e(s_k, \pi(s_k)),
-\end{align} where $s_k$ stands for the $k$'th data point collected at dataset $D_1$. Due to the construction of policy class $\Pi$, we see that $\pi_2$ must picks action $a_l$ at state $s_0$. Hence at the end of the episode $e=1$, $\pi_2$ identifies $s_1$, which is on the optimal trajectory.  
+\pi_2 = \arg\min_{\pi}\sum_{k=1}^{|D_1|} Q^e(s_k, \pi(s_k)),
+\end{align} where $s_k$ stands for the $k$'th data point collected at dataset $D_1$. Due to the construction of policy class $\Pi$, we see that $\pi_2$ must picks action $a_l$ at state $s_0$ since $Q(s_0,a_l)<Q(s_0,a_r)$. Hence at the end of the episode $e=1$, $\pi_2$ identifies $s_1$ (i.e., running $\pi_2$ from root $s_0$ leads to $s_1$), which is on the optimal trajectory.  
 
-Now assume that at the end of episode $n-1$, the newly updated policy $\pi_{n}$ identifies the state $s_{(2^{n-1}-1)}$: namely at the beginning of episode $n$, if we roll-in $\pi_n$, the algorithm will keep traverse along the leftmost trajectory till at least state $s_{(2^{n-1}-1)}$. At episode $n$, let $D_n$ as the dataset contains all data points from $D_{n-1}$ and the new collected state, reward-to-go pairs from $\tau_n$: $D_n = D_{n-1}\cup \{(s, [Q^e(s,a_l),Q^e(s,a_r)])\} $, for all $s\in\tau_n$. Now if we compute policy $pi_{n+1}$ using cost-sensitive classification (Eq.~\ref{eq:cs}) over $D_n$, we must learn a policy $\pi_{n+1}$ that identifies action $a_l$ at state $s_{(2^{j}-1)}$, since $Q^{e}(s_{(2^{j}-1)}, a_l)> Q^e(s_{(2^{j}-1)}, a_r)$, and $s_{(2^j - 1)}$ is included in $Q_n$, for $j=1,..., n-1$.  Hence at the end of episode $n$, we identify a policy $\pi_{n+1}$ such that if we roll in policy $\pi_{n+1}$ from $s_0$, we will traverse along the left most trajectory till we reach $s_{(2^n-1)}$.  
+Now assume that at the end of episode $n-1$, the newly updated policy $\pi_{n}$ identifies the state $s_{(2^{n-1}-1)}$: namely at the beginning of episode $n$, if we roll-in $\pi_n$, the algorithm will keep traverse along the leftmost trajectory till at least state $s_{(2^{n-1}-1)}$. At episode $n$, let $D_n$ as the dataset contains all data points from $D_{n-1}$ and the new collected state, cost-to-go pairs from $\tau_n$: $D_n = D_{n-1}\cup \{(s, [Q^e(s,a_l),Q^e(s,a_r)])\} $, for all $s\in\tau_n$. Now if we compute policy $\pi_{n+1}$ using cost-sensitive classification (Eq.~\ref{eq:cs}) over $D_n$, we must learn a policy $\pi_{n+1}$ that identifies action $a_l$ at state $s_{(2^{j}-1)}$, since $Q^{e}(s_{(2^{j}-1)}, a_l)< Q^e(s_{(2^{j}-1)}, a_r)$, and $s_{(2^j - 1)}$ is included in $D_n$, for $j=1,..., n-1$.  Hence at the end of episode $n$, we identify a policy $\pi_{n+1}$ such that if we roll in policy $\pi_{n+1}$ from $s_0$, we will traverse along the left most trajectory till we reach $s_{(2^n-1)}$.  
 
 Hence by the induction hypothesis, at the end of episode $K-1$, $\pi_{K}$ will reach state $s_{(2^{K-1}-1)}$, the end of the best trajectory.
 
-Since AggreVaTe with FTL with policy class $\Pi$ identifies the best trajectory with at most $K-1$ episodes, the cumulative regret is then at most $O(K)$, which is $O(\log(S))$ (assuming the average reward at each leaf is a bounded constant), as $S$ is the number of nodes in the binary-tree structure MDP $\tilde{\mathcal{M}}$.
+Since AggreVaTe with FTL with policy class $\Pi$ identifies the best trajectory with at most $K-1$ episodes, the cumulative regret is then at most $O(K)$, which is $O(\log(S))$ (assuming the average cost at each leaf is a bounded constant), as $S$ is the number of nodes in the binary-tree structure MDP $\tilde{\mathcal{M}}$.
 \end{proof}
 
 
 \section{Proof of Theorem~\ref{them:special_lower_noisy}}
 \label{sec:proof_special_noisy}
-Since in Theorem~\ref{them:special_lower_noisy} we assume that we only have access to the noisy, but unbiased estimate of $Q^e$, the problem becomes more difficult since unlike in the proof of Theorem~\ref{them:special_upper}, we cannot simply eliminate states completely since the reward-to-go of the states queried from expert is noisy and completely eliminate nodes will potentially result elimination of high reward trajectories.  Hence here we consider a different policy representation. We define $2^{K}$ base policies $\pi^1, ..., \pi^{2^K}$, such that rolling in policy $\pi^i$ at state $s_0$ will traverse along the trajectory ending at the $i$'th leaf. We define the policy class $\Pi$ as the convex hull of the base policies $\Pi = \{\pi: \sum_{i=1}^{2^K}w_i\pi^i, \sum_i^{2^K}w_i = 1, w_i\geq 0, \forall i\}$. Namely each $\pi\in\Pi$ is a stochastic policy: when rolling in, with probability $w_i$, $\pi$ execute the $i$'th base policy $\pi^i$ from $s_0$. Below we prove that AggreVaTe with Exponential Gradient Ascent achieves the regret bound $O(\sqrt{\ln(S) N})$.
+Since in Theorem~\ref{them:special_lower_noisy} we assume that we only have access to the noisy, but unbiased estimate of $Q^e$, the problem becomes more difficult since unlike in the proof of Theorem~\ref{them:special_upper}, we cannot simply eliminate states completely since the cost-to-go of the states queried from expert is noisy and completely eliminate nodes will potentially result elimination of low cost trajectories. Hence here we consider a different policy representation. We define $2^{K}$ deterministic base policies $\pi^1, ..., \pi^{2^K}$, such that rolling in policy $\pi^i$ at state $s_0$ will traverse along the trajectory ending at the $i$'th leaf. We define the policy class $\Pi$ as the convex hull of the base policies $\Pi = \{\pi: \sum_{i=1}^{2^K}w_i\pi^i, \sum_i^{2^K}w_i = 1, w_i\geq 0, \forall i\}$. Namely each $\pi\in\Pi$ is a stochastic policy: when rolling in, with probability $w_i$, $\pi$ execute the $i$'th base policy $\pi^i$ from $s_0$. Below we prove that AggreVaTeD with Exponential Gradient Descent achieves the regret bound $O(\sqrt{\ln(S) N})$.
 
 
 
 \begin{proof}
-We consider finite horizon, episodic imitation learning setting where at each episode $n$, the algorithm can roll in the current policy $\pi_n$ once and only once and traverses through trajectory $\tau_n$ . Let us define $\tilde{\ell}_n(w) = \frac{1}{K+1}\sum_{t=1}^{K+1} \sum_{s\in\tau_n}\sum_{j=1}^{2^K}w_j \tilde{Q}^e(s,\pi^j(s))$, where $\tau_n$ is the trajectory traversed by rolling in policy $\pi_n$ starting at $s_0$, and $\tilde{Q}^e$ is a noisy but unbiased estimate of $Q^e$. We simply consider the setting where $\tilde{Q}^e$ is bounded $|\tilde{Q}^e| \leq l_{\max}$ (note that we can easily extend our analysis to a more general case where $\tilde{Q}^e$ is from a sub-Gaussian distribution). Note that $\tilde{\ell}_n(w)$ is simply a linear loss with respect to $w$:
+We consider finite horizon, episodic imitation learning setting where at each episode $n$, the algorithm can roll in the current policy $\pi_n$ once and only once and traverses through trajectory $\tau_n$ . Let us define $\tilde{\ell}_n(w) = \frac{1}{K+1} \sum_{s\in\tau_n}\sum_{j=1}^{2^K}w_j \tilde{Q}^e(s,\pi^j(s))$, where $\tau_n$ is the trajectory traversed by rolling in policy $\pi_n$ starting at $s_0$, and $\tilde{Q}^e$ is a noisy but unbiased estimate of $Q^e$. We simply consider the setting where $\tilde{Q}^e$ is bounded $|\tilde{Q}^e| \leq l_{\max}$ (note that we can easily extend our analysis to a more general case where $\tilde{Q}^e$ is from a sub-Gaussian distribution). Note that $\tilde{\ell}_n(w)$ is simply a linear loss with respect to $w$:
 \begin{align}
 \tilde{\ell}_n(w) = w\cdot q_n,
-\end{align} where $q_n[j] = \sum_{s\in\tau_n} \tilde{Q}^e(s,\pi^j(s))/(K+1)$. AggreVaTe with EG updates $w$ using Exponential gradient ascent. Using the result from lemma~\ref{lemma:EG}, we get:
+\end{align} where $q_n[j] = \sum_{s\in\tau_n} \tilde{Q}^e(s,\pi^j(s))/(K+1)$. AggreVaTeD with EG updates $w$ using Exponential gradient descent. Using the result from lemma~\ref{lemma:EG}, we get:
 \begin{align}
-&\sum_{n=1}^N (\tilde{\ell}_n(w^*) - \tilde{\ell}_n(w)) = \sum_{n=1}^N (w^* \cdot q_n - w_n\cdot q_n) \leq \frac{\ln(2^K)}{\mu} + \frac{\mu}{2}\sum_{n=1}^N \sum_{j=1}^{2^K} w_n[j] q_n[j]^2 \leq \frac{\ln(2^K)}{\mu} + \frac{\mu}{2}\sum_{n=1}^N l_{\max}^2 \nonumber\\
+&\sum_{n=1}^N (\tilde{\ell}_n(w_n) - \tilde{\ell}_n(w^*)) = \sum_{n=1}^N (w_n \cdot q_n - w^*\cdot q_n) \leq \frac{\ln(2^K)}{\mu} + \frac{\mu}{2}\sum_{n=1}^N \sum_{j=1}^{2^K} w_n[j] q_n[j]^2 \leq \frac{\ln(2^K)}{\mu} + \frac{\mu}{2}\sum_{n=1}^N l_{\max}^2 \nonumber\\
 & = \frac{\ln(2^K)}{\mu} + \frac{\mu N l_{\max}^2}{2} \leq l_{\max}\sqrt{\ln(S) N}.
-\end{align} The above inequality holds for any $w^*\in \Delta(2^K)$, including the $w^e$ that corresponds to the expert (i.e., $w^e[1] = 1, w^e[i]=0,i\neq 1$ as we assumed without loss of generality the left most trajectory is the optimal trajectory).
+\end{align} Note that $S = 2^{K+1}-1$. The above inequality holds for any $w^*\in \Delta(2^K)$, including the $w^e$ that corresponds to the expert (i.e., $w^e[1] = 1, w^e[i]=0,i\neq 1$ as we assumed without loss of generality the left most trajectory is the optimal trajectory).
 
 Now let us define $\ell_n(w)$ as follows:
 \begin{align}
 \ell_n(w) = \frac{1}{K+1}\sum_{t=1}^{K+1}\sum_{s\sim \mathcal{S}} d_t^{\pi_n}(s)\sum_{j=1}^{2^K} w_j Q^e(s,\pi^j(s)).
-\end{align} Note $\ell_n(w)$ can be understood as first rolling in $\pi_n$ \emph{infinitely many times} and then querying for the exact reward-to-go $Q^e$ on all the visited states. Clearly $\tilde{\ell}_n(w)$ is an unbiased estimate of $\ell_n(w)$: $\mathbb{E}[\tilde{\ell}_n(w)] -\ell_{n}(w) = 0$, where the expectation is over the randomness of the roll-in and sampling procedure of $\tilde{Q}^e$ at iteration $n$, conditioned on all events among the previous $n-1$ iterations. Also note that $|\tilde{\ell}_n(w) - \ell_n(w)| \leq 2l_{\max}$, since $\ell_n(w) \leq l_{\max}$. Hence $\{\tilde{\ell}_n(w_n) - \ell_n(w_n)\}$ is a bounded martingale difference sequence. Hence by Azuma-Heoffding inequality, we get with probability at least $1-\delta/2$:
+\end{align} Note $\ell_n(w)$ can be understood as first rolling in $\pi_n$ \emph{infinitely many times} and then querying for the exact cost-to-go $Q^e$ on all the visited states. Clearly $\tilde{\ell}_n(w)$ is an unbiased estimate of $\ell_n(w)$: $\mathbb{E}[\tilde{\ell}_n(w)] -\ell_{n}(w) = 0$, where the expectation is over the randomness of the roll-in and sampling procedure of $\tilde{Q}^e$ at iteration $n$, conditioned on all events among the previous $n-1$ iterations. Also note that $|\tilde{\ell}_n(w) - \ell_n(w)| \leq 2l_{\max}$, since $\ell_n(w) \leq l_{\max}$. Hence $\{\tilde{\ell}_n(w_n) - \ell_n(w_n)\}$ is a bounded martingale difference sequence. Hence by Azuma-Heoffding inequality, we get with probability at least $1-\delta/2$:
 \begin{align}
-\sum_{n=1}^{N} \tilde{\ell}_n(w_n) - {\ell}_n(w_n) \leq 2l_{\max}\sqrt{\log(2/\delta)N},
+\sum_{n=1}^{N} {\ell}_n(w_n) - \tilde{\ell}_n(w_n) \leq 2l_{\max}\sqrt{\log(2/\delta)N},
 \end{align} and with probability at least $1-\delta/2$:
 \begin{align}
-\sum_{n=1}^{N} {\ell}_n(w^e) - \tilde{\ell}_{n}(w^e) \leq 2l_{\max}\sqrt{\log(2/\delta)N}.
+\sum_{n=1}^{N} \tilde{\ell}_n(w^e) - {\ell}_{n}(w^e) \leq 2l_{\max}\sqrt{\log(2/\delta)N}.
 \end{align} Combine the above inequality using union bound, we get with probability at least $1-\delta$:
 \begin{align}
-\sum_{n=1}^N (\ell_n(w^e) - \ell_n(w_n)) \leq\sum_{n=1}^N (\tilde{\ell}_n(w^e) - \tilde{\ell}_n(w_n)) \leq 4l_{\max}\sqrt{\log(2/\delta)N}. 
+\sum_{n=1}^N (\ell_n(w_n) - \ell_n(w^e)) \leq\sum_{n=1}^N (\tilde{\ell}_n(w_n) - \tilde{\ell}_n(w^e)) + 4l_{\max}\sqrt{\log(2/\delta)N}. 
 \end{align}
 
 Now let us apply the Performance Difference Lemma (Lemma~\ref{lemma:performance_difference}),  we get with probability at least $1-\delta$:
 \begin{align}
-\sum_{n=1}^N \mu(\pi^e) - \sum_{n=1}^N \mu(\pi_n) = \sum_{n=1}^N (K+1) \big(\ell_n(w_n) - \ell_n(w^e)\big)  \geq -(K+1)(l_{\max}\sqrt{\ln(S)N} +4l_{\max}\sqrt{\log(2/\delta)N}),
+\sum_{n=1}^N \mu(\pi_n) - \sum_{n=1}^N \mu(\pi^e) = \sum_{n=1}^N (K+1) \big(\ell_n(w_n) - \ell_n(w^e)\big)  \leq (K+1)(l_{\max}\sqrt{\ln(S)N} +4l_{\max}\sqrt{\log(2/\delta)N}),
 \end{align} rearrange terms we get:
 \begin{align}
-\sum_{n=1}^N \mu(\pi^e) - \sum_{n=1}^N \mu(\pi_n) \leq \log(S)l_{\max}(\sqrt{\ln(S)N} + \sqrt{\log(2/\delta)N}) \leq O(\ln(S)\sqrt{\ln(S)N}),
+\sum_{n=1}^N \mu(\pi_n) - \sum_{n=1}^N \mu(\pi^e) \leq \log(S)l_{\max}(\sqrt{\ln(S)N} + \sqrt{\log(2/\delta)N}) \leq O(\ln(S)\sqrt{\ln(S)N}),
 \end{align} with probability at least $1-\delta$.
 \end{proof}
 
@@ -759,26 +807,26 @@ The proof of theorem~\ref{them:upper_bound} is similar to the one for theorem~\r
 Recall that in general setting, the policy $\pi$ consists of probability vectors $\pi^{s,t}\in\Delta(A)$, for all $s\in\mathcal{S}$ and $t\in[H]$: $\pi = \{\pi^{s,t}\}_{\forall s\in \mathcal{S},t\in[H]}$. Also recall that the loss functions EG is optimizing are $\{\ell_n(\pi)\}$ where:
 \begin{align}
 \ell_n(\pi) = \frac{1}{H}\sum_{t=1}^H\sum_{s\in\mathcal{S}} d_t^{\pi_n}(s) (\pi^{s,t}\cdot Q_t^e(s)) = \sum_{t=1}^H\sum_{s\in\mathcal{S}}\pi^{s,t}\cdot q_n^{s,t}
-\end{align} where as we defined before $Q_t^e(s)$ stands for the reward-to-go vector $Q_t^e(s)[j] = Q_t^e(s,a_j)$, for the $j$'th action in $\mathcal{A}$, and $q_n^{s,t} = \frac{d_t^{\pi_n}(s)}{H}Q_t^e(s)$.  
+\end{align} where as we defined before $Q_t^e(s)$ stands for the cost-to-go vector $Q_t^e(s)[j] = Q_t^e(s,a_j)$, for the $j$'th action in $\mathcal{A}$, and $q_n^{s,t} = \frac{d_t^{\pi_n}(s)}{H}Q_t^e(s)$.  
 
 
 Now if we run Exponential Gradient Ascent on $\ell_n$ to optimize $\pi^{s,t}$ for each pair of state and time step independently, we can get the following regret upper bound by using Lemma~\ref{lemma:EG}:
 \begin{align}
-\max_{\pi}\sum_{n=1}^N (\ell_n(\pi) - \ell_n(\pi_n)) \leq \sum_{t=1}^H\sum_{s\in\mathcal{S}}\big( \frac{\ln(A)}{\mu} + \frac{\mu}{2}\sum_{n=1}^N\sum_{j=1}^A \pi^{s,t}[j] q_n^{s,t}[j]^2\big).
+\sum_{n=1}^N \ell_n(\pi) - \min_{\pi}\sum_{n=1}^N\ell_n(\pi_n) \leq \sum_{t=1}^H\sum_{s\in\mathcal{S}}\big( \frac{\ln(A)}{\mu} + \frac{\mu}{2}\sum_{n=1}^N\sum_{j=1}^A \pi^{s,t}[j] q_n^{s,t}[j]^2\big).
 \end{align} Note that we can upper bound $(q_n^{s,t}[j])^2$ as:
 \begin{align}
-(q_n^{s,t}[j])^2 = \frac{d_t^{\pi_n}(s)^2}{H^2}(Q^e_{\max})^2 \leq \frac{d_t^{\pi_n}(s)}{H^2} (Q^2_{\max})^2 
+(q_n^{s,t}[j])^2 \leq \frac{d_t^{\pi_n}(s)^2}{H^2}(Q^e_{\max})^2 \leq \frac{d_t^{\pi_n}(s)}{H^2} (Q^2_{\max})^2 
 \end{align}
 Substitute it back, we get:
 \begin{align}
-&\sum_{n=1}^N (\ell_n(\pi^e) - \ell_n(\pi_n)) \leq \sum_{t=1}^H\sum_{s\in\mathcal{S}} \big(\frac{\ln(A)}{\mu} + \frac{\mu}{2}\sum_{n=1}^N\sum_{j=1}^A \pi^{s,t}[j] d_t^{\pi_n}(s)\frac{(Q^e_{\max})^2}{H^2} \big) \nonumber\\
+&\sum_{n=1}^N (\ell_n(\pi_n) - \ell_n(\pi^e)) \leq \sum_{t=1}^H\sum_{s\in\mathcal{S}} \big(\frac{\ln(A)}{\mu} + \frac{\mu}{2}\sum_{n=1}^N\sum_{j=1}^A \pi^{s,t}[j] d_t^{\pi_n}(s)\frac{(Q^e_{\max})^2}{H^2} \big) \nonumber\\
 & = \sum_{t=1}^H \big(\frac{S\ln(A)}{\mu} + \frac{\mu(Q^e_{\max})^2}{2H^2}\sum_{n=1}^N\sum_{s\in\mathcal{S}}d_t^{\pi_n}(s)\sum_{j=1}^A\pi^{s,t}[j]\big) = \sum_{t=1}^H \big( \frac{S\ln(A)}{\mu} + \frac{\mu(Q^e_{\max})^2}{2H^2}N\big) \nonumber\\
 & \leq \frac{Q^e_{\max}}{H}\sqrt{2S\ln(A)N},
 \end{align} if we set $\mu = \sqrt{(Q^e_{\max})^2NS\ln(A)/(2H^2)}$.
 
 Now let us apply the performance difference lemma (Lemma~\ref{lemma:performance_difference}), we get:
 \begin{align}
-R_N = \sum_{n=1}^N\mu(\pi^e) - \sum_{n=1}^N\mu(\pi_n) = H\sum_{n=1}^N (\ell_n(w^e) - \ell_n(w_n)) \leq HQ_{\max}^e\sqrt{S\ln(A)N}.
+R_N = \sum_{n=1}^N\mu(\pi_n) - \sum_{n=1}^N\mu(\pi^e) = H\sum_{n=1}^N (\ell_n(w_n) - \ell_n(w^e)) \leq HQ_{\max}^e\sqrt{S\ln(A)N}.
 \end{align}
 
 \end{proof}
@@ -788,23 +836,23 @@ R_N = \sum_{n=1}^N\mu(\pi^e) - \sum_{n=1}^N\mu(\pi_n) = H\sum_{n=1}^N (\ell_n(w^
 \label{sec:proof_lower_bound}
 Let us use $\tilde{Q}^e(s)$ to represent the noisy but unbiased estimate of $Q^e(s)$.
 \begin{proof}
-For notation simplicity, we denote $\mathcal{S} = \{s_1, s_2, ..., s_S\}$ $|\mathcal{S}|= S$. We consider a finite MDP with time horizon $H = 1$. The initial distribution $\rho_0 = \{1/S, ..., 1/S\}$ puts $1/S$ weight on each state. 
-We consider the algorithm setting where at every episode $n$, a state $s^n\in \mathcal{S}$ is sampled from $\rho_0$ and the algorithm uses its current policy $\pi_{n}^{s_n}\in\Delta({A})$ to pick an action $a\in\mathcal{A}$ for $s^n$ and then receives a noisy but unbiased estimate $\tilde{Q}^e(s^n)_n$ of $Q^e(s^n)\in\mathbb{R}^{|\mathcal{A}|}$. The algorithm then updates its policy from $\pi_{n}^{s^n}$ to $\pi_{n+1}^{s^n}$ for $s^n$ while keep the other polices for other $s$ unchanged (since the algorithm did not receive any feedback regarding $Q^e(s)$ for $s\neq s^{n}$ and the sample distribution $\rho_0$ is fixed and uniform). For expected regret $\mathbb{E}[R_N]$ we have the following fact:
+For notation simplicity, we denote $\mathcal{S} = \{s_1, s_2, ..., s_S\}$. We consider a finite MDP with time horizon $H = 1$. The initial distribution $\rho_0 = \{1/S, ..., 1/S\}$ puts $1/S$ weight on each state. 
+We consider the algorithm setting where at every episode $n$, a state $s^n\in \mathcal{S}$ is sampled from $\rho_0$ and the algorithm uses its current policy $\pi_{n}^{s_n}\in\Delta({A})$ to pick an action $a\in\mathcal{A}$ for $s^n$ and then receives a noisy but unbiased estimate $\tilde{Q}^e(s^n)$ of $Q^e(s^n)\in\mathbb{R}^{|\mathcal{A}|}$. The algorithm then updates its policy from $\pi_{n}^{s^n}$ to $\pi_{n+1}^{s^n}$ for $s^n$ while keep the other polices for other $s$ unchanged (since the algorithm did not receive any feedback regarding $Q^e(s)$ for $s\neq s^{n}$ and the sample distribution $\rho_0$ is fixed and uniform). For expected regret $\mathbb{E}[R_N]$ we have the following fact:
 \begin{align}
 \label{eq:relation}
-&\mathop{\mathbb{E}}_{s^n\sim\rho_0,\forall n}\Big[\mathop{\mathbb{E}}_{\tilde{Q}^e(s_n)\sim P_{s_n},\forall n}\big[\sum_{n=1}^N( \pi^e_{s^n} \cdot \tilde{Q}^e(s^n) - \pi_n^{s^n}\cdot \tilde{Q}^e(s^n))\big]\Big] \nonumber\\
-&= \mathop{\mathbb{E}}_{s^n\sim \rho_0,\forall n}\Big[\sum_{n=1}^N\mathop{\mathbb{E}}_{\tilde{Q}^e_i(s_i)\sim P_{s_i},i\leq n-1}\big[ (\pi_{s^n}^e\cdot Q^e(s^n) - \pi_n^{s^n}\cdot Q^e(s^n))\big]\Big] \nonumber\\
-& = \sum_{n=1}^N\mathop{\mathbb{E}}_{s^i\sim \rho_0,i\leq n-1}\Big[\mathop{\mathbb{E}}_{\tilde{Q}^e_i(s_i)\sim P_{s_i},i\leq n-1}\big[ \mathop{\mathbb{E}}_{s\sim\rho_0}(\pi_{s}^e\cdot Q^e(s) - \pi_n^{s}\cdot Q^e(s))\big]\Big] \nonumber\\
-&= \mathbb{E}\big[\sum_{n=1}^N\mathop{\mathbb{E}}_{s\sim\rho_0}\pi_s^e\cdot Q^e(s) - \mathop{\mathbb{E}}_{s\sim \rho_0}\pi_n^s\cdot Q^e(s)\big] \nonumber\\
-& = \mathbb{E}\sum_{n=1}^N [\mu(\pi^e) - \mu(\pi_n)],
+&\mathop{\mathbb{E}}_{s^n\sim\rho_0,\forall n}\Big[\mathop{\mathbb{E}}_{\tilde{Q}^e(s_n)\sim P_{s_n},\forall n}\big[\sum_{n=1}^N( \pi_n^{s^n}\cdot \tilde{Q}^e(s^n) - \pi^e_{s^n}\cdot \tilde{Q}^e(s^n))\big]\Big] \nonumber\\
+&= \mathop{\mathbb{E}}_{s^n\sim \rho_0,\forall n}\Big[\sum_{n=1}^N\mathop{\mathbb{E}}_{\tilde{Q}^e_i(s_i)\sim P_{s_i},i\leq n-1}\big[ (\pi_n^{s^n}\cdot Q^e(s^n) - \pi_{s^n}^e\cdot Q^e(s^n))\big]\Big] \nonumber\\
+& = \sum_{n=1}^N\mathop{\mathbb{E}}_{s^i\sim \rho_0,i\leq n-1}\Big[\mathop{\mathbb{E}}_{\tilde{Q}^e_i(s_i)\sim P_{s_i},i\leq n-1}\big[ \mathop{\mathbb{E}}_{s\sim\rho_0}(\pi_n^{s}\cdot Q^e(s) - \pi_{s}^e\cdot Q^e(s))\big]\Big] \nonumber\\
+&= \mathbb{E}\big[\sum_{n=1}^N\mathop{\mathbb{E}}_{s\sim\rho_0}\pi_n^s\cdot Q^e(s) - \mathop{\mathbb{E}}_{s\sim \rho_0}\pi_s^e\cdot Q^e(s)\big] \nonumber\\
+& = \mathbb{E}\sum_{n=1}^N [\mu(\pi_n) - \mu(\pi^e)],
 %\mathbb{E}_{\{s^{n}\sim\rho_0\}}\inf_{\pi^s_n,\forall n,s}\sup_{P_s,\forall s}\mathbb{E}_{\{P_s\}} \big[ \sum_{n=1}^N( \pi^e_{s^n} \cdot Q^e(s^n) - \pi_n^{s^n}\cdot Q^e(s^n)) \big]
 \end{align}where the expectation in the final equation is taken with respect to random variables $\pi_i,i\in[N]$ since each $\pi_i$ is depend on $\tilde{Q}^e_j$, for $j< i$ and $s^j$, for $j<i$.  
 
-We first consider $\mathop{\mathbb{E}}_{\tilde{Q}^e(s^n)\sim P_{s^n},\forall n}\big[\sum_{n=1}^N( \pi^e_{s^n} \cdot \tilde{Q}^e(s^n) - \pi_n^{s^n}\cdot \tilde{Q}^e(s^n))\big]$ conditioned on a given sequence of $s^1,...,s^N$.
+We first consider $\mathop{\mathbb{E}}_{\tilde{Q}^e(s^n)\sim P_{s^n},\forall n}\big[\sum_{n=1}^N(  \pi_n^{s^n}\cdot \tilde{Q}^e(s^n) - \pi^e_{s^n}\cdot \tilde{Q}^e(s^n))\big]$ conditioned on a given sequence of $s^1,...,s^N$.
 Let us define that among $N$ episodes, the set of the index of the episodes that state $s_i$ is sampled as $\mathcal{N}_i$ and its cardinality as $N_i$, and we then have $\sum_{i=1}^S N_i = N$ and $\mathcal{N}_i \cap\mathcal{N}_j = \emptyset$,for $i\neq j$. 
 \begin{align}
-&\mathop{\mathbb{E}}_{\tilde{Q}^e(s_n)\sim P_{s_n},\forall n}\big[\sum_{n=1}^N( \pi^e_{s^n} \cdot \tilde{Q}^e(s^n) - \pi_n^{s^n}\cdot \tilde{Q}^e(s^n))\big] \nonumber\\
-& = \sum_{i=1}^S \sum_{j\in \mathcal{N}_i} \mathop{\mathbb{E}}_{\tilde{Q}_j^e(s_i)\sim P_{s_i}}(\pi_{s_i}^e\cdot\tilde{Q}_j^e(s_i) - \pi_{j}^{s_i}\tilde{Q}_j^e(s_i))
+&\mathop{\mathbb{E}}_{\tilde{Q}^e(s^n)\sim P_{s^n},\forall n}\big[\sum_{n=1}^N(  \pi_n^{s^n}\cdot \tilde{Q}^e(s^n) - \pi^e_{s^n}\cdot \tilde{Q}^e(s^n))\big] \nonumber\\
+& = \sum_{i=1}^S \sum_{j\in \mathcal{N}_i} \mathop{\mathbb{E}}_{\tilde{Q}_j^e(s_i)\sim P_{s_i}}(\pi_{j}^{s_i}\cdot\tilde{Q}_j^e(s_i) - \pi_{s_i}^e\tilde{Q}_j^e(s_i))
 \label{eq:composed}
 \end{align}
 
@@ -816,16 +864,16 @@ Let us define that among $N$ episodes, the set of the index of the episodes that
 %\end{align}
 Note that for each state $s_i$, at the rounds from $\mathcal{N}_i$, we can think of the algorithm running any possible online linear regression algorithm to compute the sequence of policies $\pi_j^{s_i},\forall j\in \mathcal{N}_i$ for state $s_i$. Note that from classic online linear regression analysis, we can show that for state $s_i$ there exists a distribution $P_{s_i}$ such that for any online algorithm:
 \begin{align}
-\mathop{\mathbb{E}}_{\tilde{Q}^e_j(s_i)\sim P_{s_i},\forall j\in\mathcal{N}_i}\big[ \sum_{j\in\mathcal{N}_i} (\pi_{s_i}^e \cdot \tilde{Q}_j^e(s_i) - \pi_{j}^{s_i}\cdot \tilde{Q}_j^e(s_i))  \big] \geq c\sqrt{\ln(A) N_i},
+\mathop{\mathbb{E}}_{\tilde{Q}^e_j(s_i)\sim P_{s_i},\forall j\in\mathcal{N}_i}\big[ \sum_{j\in\mathcal{N}_i} (\pi_{j}^{s_i} \cdot \tilde{Q}_j^e(s_i) - \pi_{s_i}^e\cdot \tilde{Q}_j^e(s_i))  \big] \geq c\sqrt{\ln(A) N_i},
 \end{align} for some non-zero positive constant $c$.
 Substitute the above inequality into Eq.~\ref{eq:composed}, we have:
 \begin{align}
-&\mathop{\mathbb{E}}_{\tilde{Q}^e(s_n)\sim P_{s_n},\forall n}\big[\sum_{n=1}^N( \pi^e_{s^n} \cdot \tilde{Q}^e(s^n) - \pi_n^{s^n}\cdot \tilde{Q}^e(s^n))\big]\geq \sum_{i=1}^S c\sqrt{\ln(A)N_i} = c\sqrt{\ln(A)}\sum_{i=1}^S\sqrt{N_i}.
+&\mathop{\mathbb{E}}_{\tilde{Q}^e(s_n)\sim P_{s_n},\forall n}\big[\sum_{n=1}^N(   \pi_n^{s^n}\cdot \tilde{Q}^e(s^n) -\pi^e_{s^n}\cdot \tilde{Q}^e(s^n))\big]\geq \sum_{i=1}^S c\sqrt{\ln(A)N_i} = c\sqrt{\ln(A)}\sum_{i=1}^S\sqrt{N_i}.
 \end{align}
 Now let us put the expectation $\mathbb{E}_{s^i\sim\rho_0,\forall i}$ back, we have:
 \begin{align}
 \label{eq:fact_1}
-&\mathop{\mathbb{E}}_{s^n\sim\rho_0,\forall n}\Big[\mathop{\mathbb{E}}_{\tilde{Q}^e(s_n)\sim P_{s_n}}\big[\sum_{n=1}^N( \pi^e_{s^n} \cdot \tilde{Q}^e(s^n) - \pi_n^{s^n}\cdot \tilde{Q}^e(s^n))|s^1,...,s^n\big]\Big]\geq  c\sqrt{\ln(A)}\sum_{i=1}^N\mathbb{E}[\sqrt{N_i}].
+&\mathop{\mathbb{E}}_{s^n\sim\rho_0,\forall n}\Big[\mathop{\mathbb{E}}_{\tilde{Q}^e(s_n)\sim P_{s_n}}\big[\sum_{n=1}^N( \pi_n^{s^n}\cdot \tilde{Q}^e(s^n) - \pi^e_{s^n}\cdot \tilde{Q}^e(s^n))|s^1,...,s^n\big]\Big]\geq  c\sqrt{\ln(A)}\sum_{i=1}^N\mathbb{E}[\sqrt{N_i}].
 \end{align}
 
 Note that each $N_i$ is sampled from a Binomial distribution $\mathcal{B}(N, 1/S)$. To lower bound $\mathbb{E}_{n\sim \mathcal{B}(N,1/S)} \sqrt{n}$, we use Hoeffding's Inequality here.  Note that $N_i = \sum_{n=1}^N a_n$, where $a_n = 1$ if $s_i$ is picked at iteration $n$ and zero otherwise. Hence $a_i$ is from a Bernoulli distribution with parameter $1/S$. Using Hoeffding bound, for $N_i/N$, we get:
@@ -844,7 +892,7 @@ Hence, we can lower bound $\mathbb{E}[\sqrt{N_i}]$ as follows:
 \end{align}
 Substitute this result back to Eq.~\ref{eq:fact_1} and use the fact from Eq.~\ref{eq:relation}, we get:
 \begin{align}
-\lim_{N\to\infty}\mathbb{E}[R_N] = \lim_{N\to\infty}&\mathop{\mathbb{E}}_{s^n\sim\rho_0,\forall n}\Big[\mathop{\mathbb{E}}_{\tilde{Q}^e(s_n)\sim P_{s_n},\forall n}\big[\sum_{n=1}^N( \pi^e_{s^n} \cdot \tilde{Q}^e(s^n) - \pi_n^{s^n}\cdot \tilde{Q}^e(s^n))\big]\Big]\geq c\sqrt{\ln(A)}\sum_{i=1}^S\mathbb{E}[\sqrt{N_i}] \nonumber\\
+\lim_{N\to\infty}\mathbb{E}[R_N] = \lim_{N\to\infty}&\mathop{\mathbb{E}}_{s^n\sim\rho_0,\forall n}\Big[\mathop{\mathbb{E}}_{\tilde{Q}^e(s_n)\sim P_{s_n},\forall n}\big[\sum_{n=1}^N( \pi_n^{s^n} \cdot \tilde{Q}^e(s^n) - \pi^e_{s^n}\cdot \tilde{Q}^e(s^n))\big]\Big]\geq c\sqrt{\ln(A)}\sum_{i=1}^S\mathbb{E}[\sqrt{N_i}] \nonumber\\
 &\geq c\sqrt{\ln(A)}S\sqrt{0.5 N/S} = \Omega(\sqrt{S\ln(A)N}). \nonumber
 \end{align}
 Hence we prove the theorem.
